@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 
 export default function Navbar() {
+  const [connected, setConnected] = useState(false);
+
   const connect = async () => {
     if (window.ethereum) {
       try {
@@ -16,6 +18,7 @@ export default function Navbar() {
         window.userAddress = selectedAccount;
         console.log("Connected account:", selectedAccount);
         window.localStorage.setItem("userAddress", selectedAccount); // Save the user address
+        setConnected(true);
       } catch (error) {
         console.error("Error connecting to wallet:", error);
       }
@@ -28,23 +31,27 @@ export default function Navbar() {
   const disconnect = () => {
     window.userAddress = null; // Clear the user address
     window.localStorage.removeItem("userAddress"); // Remove it from local storage
+    setConnected(false);
   };
 
   
 
   return (
-    <div>
+    <div className="h-[10vh] flex items-center justify-between">
+    <div className="flex items-center"><img src="/logo.webp" alt="" width={"50px"} />
+    <p className="text-2xl"><strong>DocCheck</strong></p></div>
+    
       <button
         type="button"
         onClick={connect}
-        className="rounded-lg border border-red-500 bg-red-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-red-700 hover:bg-red-700 focus:ring focus:ring-red-200"
+        className={`${connected?"hidden":""} rounded-lg border border-red-500 bg-red-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-red-700 hover:bg-red-700 focus:ring focus:ring-red-200`}
       >
         Login
       </button>
       <button
         type="button"
         onClick={disconnect}
-        className="rounded-lg border border-red-500 bg-red-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-red-700 hover:bg-red-700 focus:ring focus:ring-red-200"
+        className={`${!connected?"hidden":""} rounded-lg border border-red-500 bg-red-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-red-700 hover:bg-red-700 focus:ring focus:ring-red-200`}
       >
         Logout
       </button>

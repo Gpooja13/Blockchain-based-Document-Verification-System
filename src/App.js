@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Update this line
 import Home from "./Screens/Home";
 import SideBar from "./Components/SideBar";
 import Navbar from "./Components/Navbar";
 import Admin from "./Screens/Admin";
 import Upload from "./Screens/Upload";
-import { abi, address, explore, network } from "./Constants/constants";
-// const Web3 = require('web3');
+import Verify from "./Screens/Verify";
+import { abi, address } from "./Constants/constants"; // Network removed for simplicity
 import Web3 from "web3";
+import Contact from "./Screens/Contact";
+import About from "./Screens/About";
+import View from "./Screens/View";
 
 const App = () => {
   const [contract, setContract] = useState(null);
   const [userAddress, setUserAddress] = useState("");
-
-  // // Setting up contract details
-  // window.CONTRACT = {
-  //   address: address,
-  //   network: network,
-  //   explore: explore,
-  //   abi: abi, // ABI from your constants
-  // };
 
   const get_ChainID = async () => {
     if (window.ethereum) {
@@ -44,8 +39,6 @@ const App = () => {
         const contractAddress = address; // Use the validated contract address
         const contractABI = abi; // Use the correct ABI
 
-        console.log("Contract Address:", contractAddress); // Log the address for debugging
-
         try {
           const accounts = await window.ethereum.request({
             method: "eth_requestAccounts",
@@ -69,35 +62,27 @@ const App = () => {
     initializeWeb3();
   }, []);
 
-  const appRouter = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-      children: [
-        {
-          path: "/admin",
-          element: <Admin get_ChainID={get_ChainID} contract={contract} userAddress={userAddress} />,
-        },
-        {
-          path: "/upload",
-          element: <Upload />,
-        },
-        {
-          path: "/verify",
-          element: <Upload />, // You may want a different component here for verification
-        },
-      ],
-    },
-  ]);
-
   return (
-    <div>
-      <Navbar />
-      <div className="flex h-[100vh]">
-        <SideBar />
-        <RouterProvider router={appRouter} />
+    <Router>
+      <div>
+        <Navbar />
+        <div className="flex h-[100vh]">
+          <SideBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/admin"
+              element={<Admin get_ChainID={get_ChainID} contract={contract} userAddress={userAddress} />}
+            />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/verify" element={<Verify />} />
+            <Route path="/view" element={<View />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 };
 
