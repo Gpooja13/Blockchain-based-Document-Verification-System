@@ -32,6 +32,7 @@ const App = () => {
     }
   };
 
+
   useEffect(() => {
     const initializeWeb3 = async () => {
       if (typeof window.ethereum !== "undefined") {
@@ -66,16 +67,34 @@ const App = () => {
     <Router>
       <div>
         <Navbar />
-        <div className="flex h-[100vh]">
+        <div className="flex h-[90vh]">
           <SideBar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
               path="/admin"
-              element={<Admin get_ChainID={get_ChainID} contract={contract} userAddress={userAddress} />}
+              element={
+                <Admin
+                  get_ChainID={get_ChainID}
+                  contract={contract}
+                  userAddress={userAddress}
+                />
+              }
             />
-            <Route path="/upload" element={<Upload />} />
-            <Route path="/verify" element={<Verify />} />
+            <Route
+              path="/upload"
+              element={
+                <Upload
+                  get_ChainID={get_ChainID}
+                  contract={contract}
+                  userAddress={userAddress}
+                />
+              }
+            />
+            <Route
+              path="/verify"
+              element={<Verify contract={contract} userAddress={userAddress} />}
+            />
             <Route path="/view" element={<View />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
