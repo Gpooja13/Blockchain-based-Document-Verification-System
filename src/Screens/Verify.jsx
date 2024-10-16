@@ -1,59 +1,66 @@
 import React, { useState } from "react";
 import Heading from "../Components/Heading";
-import Web3 from "web3";
+import Input from "../Components/Input";
+// import Web3 from "web3";
 
-export default function Verify({ contract, userAddress }) {
-  const [loading, setLoading] = useState(false);
+export default function Verify({
+  contract,
+  userAddress,
+  fileHash,
+  message,
+  setMessage,
+  isFileHashed,
+  file,
+  loading,
+  setLoading,
+  handleFileChange,
+}) {
   const [verificationInfo, setVerificationInfo] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
-  const [fileHash, setFileHash] = useState(null);
-  const [message, setMessage] = useState("");
-  const [isFileHashed, setIsFileHashed] = useState(false);
-  const [file, setFile] = useState(null);
 
-  const getSha3 = async (file) => {
-    if (!file) {
-      setMessage("No file selected");
-      return;
-    }
+  // const getSha3 = async (file) => {
+  //   if (!file) {
+  //     setMessage("No file selected");
+  //     return;
+  //   }
 
-    setMessage("Hashing Your Document 😴...");
-    const reader = new FileReader();
+  //   setMessage("Hashing Your Document 😴...");
+  //   const reader = new FileReader();
 
-    reader.readAsText(file, "UTF-8");
+  //   reader.readAsText(file, "UTF-8");
 
-    reader.onload = async (evt) => {
-      try {
-        const web3 = new Web3(Web3.givenProvider);
-        const hashedFile = web3.utils.soliditySha3(evt.target.result);
+  //   reader.onload = async (evt) => {
+  //     try {
+  //       const web3 = new Web3(Web3.givenProvider);
+  //       const hashedFile = web3.utils.soliditySha3(evt.target.result);
 
-        setFileHash(hashedFile);
-        setIsFileHashed(true);
-        setMessage("Document Hashed 😎");
-        console.log(`Document Hash: ${hashedFile}`);
-      } catch (error) {
-        console.error("Error hashing the file", error);
-        setMessage("Error hashing the file");
-      }
-    };
+  //       setFileHash(hashedFile);
+  //       setIsFileHashed(true);
+  //       setMessage("Document Hashed 😎");
+  //       console.log(`Document Hash: ${hashedFile}`);
+  //     } catch (error) {
+  //       console.error("Error hashing the file", error);
+  //       setMessage("Error hashing the file");
+  //     }
+  //   };
 
-    reader.onerror = () => {
-      setMessage("Error reading the file");
-      setFileHash(null);
-    };
-  };
+  //   reader.onerror = () => {
+  //     setMessage("Error reading the file");
+  //     setFileHash(null);
+  //   };
+  // };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    setMessage("");
-    setIsFileHashed(false);
-    setFileHash(null);
+  // const handleFileChange = (e) => {
+  //   const selectedFile = e.target.files[0];
+  //   setFile(selectedFile);
+  //   setMessage("");
+  //   setIsFileHashed(false);
+  //   setFileHash(null);
 
-    if (selectedFile) {
-      getSha3(selectedFile);
-    }
-  };
+  //   if (selectedFile) {
+  //     getSha3(selectedFile);
+  //   }
+  // };
 
   const verifyHash = async () => {
     setLoading(true);
@@ -96,7 +103,7 @@ export default function Verify({ contract, userAddress }) {
   return (
     <div>
       <Heading title={"Verify"} />
-      <div className="mx-auto max-w-xs">
+      {/* <div className="mx-auto max-w-xs">
         <label
           htmlFor="doc-file"
           className="mb-1 block text-sm font-medium text-gray-700"
@@ -138,7 +145,8 @@ export default function Verify({ contract, userAddress }) {
             onChange={handleFileChange}
           />
         </label>
-      </div>
+      </div> */}
+      <Input handleFileChange={handleFileChange}/>
 
       <div className="flex flex-wrap justify-center gap-5">
         <button

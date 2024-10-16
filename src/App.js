@@ -15,6 +15,11 @@ import View from "./Screens/View";
 const App = () => {
   const [contract, setContract] = useState(null);
   const [userAddress, setUserAddress] = useState("");
+  const [fileHash, setFileHash] = useState(null);
+  const [message, setMessage] = useState("");
+  const [isFileHashed, setIsFileHashed] = useState(false);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const get_ChainID = async () => {
     if (window.ethereum) {
@@ -32,6 +37,49 @@ const App = () => {
     }
   };
 
+  const getSha3 = async (file) => {
+    if (!file) {
+      setMessage("No file selected");
+      return;
+    }
+
+    setMessage("Hashing Your Document 😴...");
+    const reader = new FileReader();
+
+    reader.readAsText(file, "UTF-8");
+
+    reader.onload = async (evt) => {
+      try {
+        const web3 = new Web3(Web3.givenProvider);
+        const hashedfile = await web3.utils.soliditySha3(evt.target.result);
+
+        setFileHash(hashedfile);
+        setIsFileHashed(true);
+        setMessage("Document Hashed 😎");
+        console.log(`Document Hash: ${hashedfile}`);
+      } catch (error) {
+        console.error("Error hashing the file", error);
+        setMessage("Error hashing the file");
+      }
+    };
+
+    reader.onerror = () => {
+      setMessage("Error reading the file");
+      setFileHash(null);
+    };
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    setMessage("");
+    setIsFileHashed(false);
+    setFileHash(null);
+
+    if (selectedFile) {
+      getSha3(selectedFile);
+    }
+  };
 
   useEffect(() => {
     const initializeWeb3 = async () => {
@@ -88,12 +136,33 @@ const App = () => {
                   get_ChainID={get_ChainID}
                   contract={contract}
                   userAddress={userAddress}
+                  handleFileChange={handleFileChange}
+                  fileHash={fileHash}
+                  message={message}
+                  setMessage={setMessage}
+                  isFileHashed={isFileHashed}
+                  file={file}
+                  loading={loading}
+                  setLoading={setLoading}
                 />
               }
             />
             <Route
               path="/verify"
-              element={<Verify contract={contract} userAddress={userAddress} />}
+              element={
+                <Verify
+                  contract={contract}
+                  userAddress={userAddress}
+                  handleFileChange={handleFileChange}
+                  fileHash={fileHash}
+                  message={message}
+                  setMessage={setMessage}
+                  isFileHashed={isFileHashed}
+                  file={file}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
+              }
             />
             <Route path="/view" element={<View />} />
             <Route path="/about" element={<About />} />

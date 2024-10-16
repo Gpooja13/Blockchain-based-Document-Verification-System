@@ -1,62 +1,70 @@
 import React, { useState } from "react";
 import Heading from "../Components/Heading";
 import { JWT } from "../Constants/constants";
-import Web3 from "web3";
+import Input from "../Components/Input";
+// import Web3 from "web3";
 
-export default function Upload({ get_ChainID, userAddress, contract }) {
-  const [fileHash, setFileHash] = useState(null);
-  const [message, setMessage] = useState("");
-  const [isFileHashed, setIsFileHashed] = useState(false);
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
+export default function Upload({
+  get_ChainID,
+  userAddress,
+  contract,
+  fileHash,
+  message,
+  setMessage,
+  isFileHashed,
+  file,
+  loading,
+  setLoading,
+  handleFileChange,
+}) {
   const [cid, setCid] = useState(null);
 
   // const pinataApiKey = projectId; // Replace with your Pinata API Key
   // const pinataSecretApiKey = projectSecret; // Replace with your Pinata Secret API Key
 
-  const getSha3 = async (file) => {
-    if (!file) {
-      setMessage("No file selected");
-      return;
-    }
+  // const getSha3 = async (file) => {
+  //   if (!file) {
+  //     setMessage("No file selected");
+  //     return;
+  //   }
 
-    setMessage("Hashing Your Document 😴...");
-    const reader = new FileReader();
+  //   setMessage("Hashing Your Document 😴...");
+  //   const reader = new FileReader();
 
-    reader.readAsText(file, "UTF-8");
+  //   reader.readAsText(file, "UTF-8");
 
-    reader.onload = async (evt) => {
-      try {
-        const web3 = new Web3(Web3.givenProvider);
-        const hashedfile = await web3.utils.soliditySha3(evt.target.result);
+  //   reader.onload = async (evt) => {
+  //     try {
+  //       const web3 = new Web3(Web3.givenProvider);
+  //       const hashedfile = await web3.utils.soliditySha3(evt.target.result);
 
-        setFileHash(hashedfile);
-        setIsFileHashed(true);
-        setMessage("Document Hashed 😎");
-        console.log(`Document Hash: ${hashedfile}`);
-      } catch (error) {
-        console.error("Error hashing the file", error);
-        setMessage("Error hashing the file");
-      }
-    };
+  //       setFileHash(hashedfile);
+  //       setIsFileHashed(true);
+  //       setMessage("Document Hashed 😎");
+  //       console.log(`Document Hash: ${hashedfile}`);
+  //     } catch (error) {
+  //       console.error("Error hashing the file", error);
+  //       setMessage("Error hashing the file");
+  //     }
+  //   };
 
-    reader.onerror = () => {
-      setMessage("Error reading the file");
-      setFileHash(null);
-    };
-  };
+  //   reader.onerror = () => {
+  //     setMessage("Error reading the file");
+  //     setFileHash(null);
+  //   };
+  // };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    setMessage("");
-    setIsFileHashed(false);
-    setFileHash(null);
+  // const handleFileChange = (e) => {
+  //   const selectedFile = e.target.files[0];
+  //   setFile(selectedFile);
+  //   setMessage("");
+  //   setIsFileHashed(false);
+  //   setFileHash(null);
 
-    if (selectedFile) {
-      getSha3(selectedFile);
-    }
-  };
+  //   if (selectedFile) {
+  //     getSha3(selectedFile);
+  //   }
+  // };
 
   const uploadFileToPinata = async () => {
     if (!file) {
@@ -153,7 +161,7 @@ export default function Upload({ get_ChainID, userAddress, contract }) {
     <div>
       <Heading title={"Upload"} />
 
-      <div className="mx-auto max-w-xs mt-4">
+      {/* <div className="mx-auto max-w-xs mt-4">
         <label
           htmlFor="example5"
           className="mb-1 block text-sm font-medium text-gray-700"
@@ -195,7 +203,8 @@ export default function Upload({ get_ChainID, userAddress, contract }) {
             onChange={handleFileChange}
           />
         </label>
-      </div>
+      </div> */}
+      <Input handleFileChange={handleFileChange}/>
 
       {message && (
         <div className="text-center mt-4">

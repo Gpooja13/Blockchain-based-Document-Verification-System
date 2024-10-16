@@ -35,6 +35,41 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
       console.log("You need to provide address & information to add.");
     }
   };
+
+  const deleteExporter = async () => {
+    if (address) {
+      setLoading(true);
+      setMessage("Please confirm the transaction 😕...");
+      setError("");
+
+      await get_ChainID(); // Ensure ChainID is retrieved
+
+      try {
+        await contract.methods
+          .delete_Exporter(address)
+          .send({ from: userAddress })
+          .on("transactionHash", function (hash) {
+            setMessage("Please wait for transaction to be mined 😴...");
+          })
+          .on("receipt", function (receipt) {
+            setMessage("Exporter Deleted Successfully 🙂");
+            console.log(receipt);
+          })
+          .on("error", function (error) {
+            console.error(error.message);
+            setError(error.message);
+          });
+      } catch (err) {
+        console.error(err.message);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setError("You need to provide an address to delete 👍");
+    }
+  };
+  
   return (
     <div className="bg-pink-300">
       <Heading title={"Admin"} />
