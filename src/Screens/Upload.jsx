@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Heading from "../Components/Heading";
 import { JWT } from "../Constants/constants";
 import Input from "../Components/Input";
@@ -18,53 +18,10 @@ export default function Upload({
   handleFileChange,
 }) {
   const [cid, setCid] = useState(null);
-
-  // const pinataApiKey = projectId; // Replace with your Pinata API Key
-  // const pinataSecretApiKey = projectSecret; // Replace with your Pinata Secret API Key
-
-  // const getSha3 = async (file) => {
-  //   if (!file) {
-  //     setMessage("No file selected");
-  //     return;
-  //   }
-
-  //   setMessage("Hashing Your Document 😴...");
-  //   const reader = new FileReader();
-
-  //   reader.readAsText(file, "UTF-8");
-
-  //   reader.onload = async (evt) => {
-  //     try {
-  //       const web3 = new Web3(Web3.givenProvider);
-  //       const hashedfile = await web3.utils.soliditySha3(evt.target.result);
-
-  //       setFileHash(hashedfile);
-  //       setIsFileHashed(true);
-  //       setMessage("Document Hashed 😎");
-  //       console.log(`Document Hash: ${hashedfile}`);
-  //     } catch (error) {
-  //       console.error("Error hashing the file", error);
-  //       setMessage("Error hashing the file");
-  //     }
-  //   };
-
-  //   reader.onerror = () => {
-  //     setMessage("Error reading the file");
-  //     setFileHash(null);
-  //   };
-  // };
-
-  // const handleFileChange = (e) => {
-  //   const selectedFile = e.target.files[0];
-  //   setFile(selectedFile);
-  //   setMessage("");
-  //   setIsFileHashed(false);
-  //   setFileHash(null);
-
-  //   if (selectedFile) {
-  //     getSha3(selectedFile);
-  //   }
-  // };
+  const [events, setEvents] = useState([]);
+  const [name, setName] = useState("");
+  const [rollno, setRollno] = useState("");
+  const [desc, setDesc] = useState("");
 
   const uploadFileToPinata = async () => {
     if (!file) {
@@ -86,7 +43,6 @@ export default function Upload({
           method: "POST",
           body: formData,
           headers: {
-            // Authorization: `Bearer ${btoa(`${pinataApiKey}:${pinataSecretApiKey}`)}`, // Encode API keys for authentication
             Authorization: `Bearer ${JWT}`,
           },
         }
@@ -134,7 +90,7 @@ export default function Upload({
 
         // Call contract method
         contract.methods
-          .addDocHash(fileHash, uploadedCid)
+          .addDocHash(fileHash, uploadedCid, name, desc, rollno)
           .send({ from: userAddress })
           .on("transactionHash", function (_hash) {
             setMessage("Please wait for transaction to be mined...");
@@ -156,6 +112,38 @@ export default function Upload({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    let isMounted = true; // Track if component is mounted
+    const fetchEvents = async () => {
+      if (!isMounted) return;
+      try {
+        setLoading(true);
+        setMessage("");
+        // Fetch AddHash events
+        const addHashEvents = await contract.getPastEvents("AddHash", {
+          filter: { exporter: userAddress }, // Optional: filter by user address
+          fromBlock: 0, // Change as needed
+          toBlock: "latest",
+        });
+        console.log("a", addHashEvents);
+
+        setEvents(addHashEvents);
+
+        console.log(events);
+      } catch (error) {
+        console.error("Error fetching past events:", error);
+        setMessage("Error fetching events. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+    return () => {
+      isMounted = false; // Cleanup on unmount
+    };
+  }, [contract, userAddress]);
 
   return (
     <div>
@@ -204,23 +192,77 @@ export default function Upload({
           />
         </label>
       </div> */}
-      <Input handleFileChange={handleFileChange}/>
 
-      {message && (
-        <div className="text-center mt-4">
-          <h5 className="text-warning">{message}</h5>
-        </div>
-      )}
+      <div class="mx-auto max-w-xl">
+        <form action="" class="space-y-5">
+          <div class="grid grid-cols-12 gap-5">
+            <div class="col-span-6">
+              <label
+                for="example7"
+                class="mb-1 block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="example7"
+                onChange={(e) => setName(e.target.value)}
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+                placeholder="you@email.com"
+              />
+            </div>
+            <div class="col-span-6">
+              <label
+                for="example8"
+                class="mb-1 block text-sm font-medium text-gray-700"
+              >
+                Roll no
+              </label>
+              <input
+                type="text"
+                id="example8"
+                onChange={(e) => setRollno(e.target.value)}
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+                placeholder="you@email.com"
+              />
+            </div>
+            <div class="col-span-12">
+              <label
+                for="example9"
+                class="mb-1 block text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
+              <input
+                type="text"
+                id="example9"
+                onChange={(e) => setDesc(e.target.value)}
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+                placeholder="1864 Main Street"
+              />
+            </div>
+            <div className="col-span-12">
+              <Input handleFileChange={handleFileChange} />
 
-      <div className="flex flex-wrap justify-center gap-5 mt-6">
-        <button
-          type="button"
-          onClick={sendHash}
-          className="rounded-lg border border-yellow-500 bg-yellow-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-yellow-700 hover:bg-yellow-700 focus:ring focus:ring-yellow-200 disabled:cursor-not-allowed disabled:border-yellow-300 disabled:bg-yellow-300"
-          disabled={!isFileHashed || loading}
-        >
-          {loading ? "Processing..." : "Upload File"}
-        </button>
+              {message && (
+                <div className="text-center mt-4">
+                  <h5 className="text-warning">{message}</h5>
+                </div>
+              )}
+
+              <div className="flex flex-wrap justify-center gap-5 mt-6">
+                <button
+                  type="button"
+                  onClick={sendHash}
+                  className="rounded-lg border border-yellow-500 bg-yellow-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-yellow-700 hover:bg-yellow-700 focus:ring focus:ring-yellow-200 disabled:cursor-not-allowed disabled:border-yellow-300 disabled:bg-yellow-300"
+                  disabled={!isFileHashed || loading}
+                >
+                  {loading ? "Processing..." : "Upload File"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
 
       {fileHash && (
