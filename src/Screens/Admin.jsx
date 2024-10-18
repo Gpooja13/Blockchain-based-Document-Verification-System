@@ -96,7 +96,11 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
     <div className="bg-gray-200">
       <Heading title={"Admin"} />
       <div className="flex justify-center items-center px-10">
-      <Modal showModal={showModal} setShowModal={setShowModal} deleteExporter={deleteExporter}/>
+        <Modal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          deleteExporter={deleteExporter}
+        />
         <div className=" w-[50%] h-[65vh] bg-white p-10 mt-10 mr-4 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
             <h2 className="font-semibold text-2xl">Register Authority</h2>
@@ -154,7 +158,6 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
                 </svg>
                 Add
               </button>
-
             </div>
           </form>
         </div>
@@ -184,7 +187,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
                           Number(log.returnValues.minetime) * 1000
                         ).toLocaleDateString()}
                       </p>
-                      <button onClick={()=>setShowModal(true)}>
+                      <button onClick={() => setShowModal(true)}>
                         <MdDeleteOutline
                           fontSize={"28px"}
                           className="text-gray-300 hover:text-red-600 mr-5"
@@ -207,7 +210,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
                           Number(log.returnValues.minetime) * 1000
                         ).toLocaleDateString()}
                       </p>
-                      <button onClick={()=>setShowModal(true)}>
+                      <button onClick={() => setShowModal(true)}>
                         <MdDeleteOutline
                           fontSize={"28px"}
                           className="text-gray-300 hover:text-red-600 mr-5"
@@ -230,7 +233,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
                           Number(log.returnValues.minetime) * 1000
                         ).toLocaleDateString()}
                       </p>
-                      <button onClick={()=>setShowModal(true)}>
+                      <button onClick={() => setShowModal(true)}>
                         <MdDeleteOutline
                           fontSize={"28px"}
                           className="text-gray-300 hover:text-red-600 mr-5"

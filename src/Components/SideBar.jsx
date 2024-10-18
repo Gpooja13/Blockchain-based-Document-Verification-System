@@ -25,7 +25,7 @@ const location = useLocation();
   }, [location.pathname]);
 
   return (
-    <div>
+    <div className="z-50">
       <aside className="w-72 flex-none bg-blue-200 p-2">
         <div className="flex flex-wrap items-center justify-center gap-3 h-[15vh] border-b-2 border-white">
           <div className="h-10 w-10">

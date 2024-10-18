@@ -2,16 +2,16 @@ import React from "react";
 
 export default function Input({handleFileChange}) {
   return (
-    <div className="mx-auto max-w-xs">
+    <div className="mx-auto w-[20vw] ">
       <label
         htmlFor="doc-file"
-        className="mb-1 block text-sm font-medium text-gray-700"
+        className="mb-1 block font-medium text-gray-700"
       >
         Upload file
       </label>
       <label className="flex w-full cursor-pointer appearance-none items-center justify-center rounded-md border-2 border-dashed border-gray-200 p-6 transition-all hover:border-primary-300">
         <div className="space-y-1 text-center">
-          <div className="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
+          <div className="mx-auto my-1 h-10 inline-flex w-10 items-center justify-center rounded-full bg-gray-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -27,14 +27,14 @@ export default function Input({handleFileChange}) {
               />
             </svg>
           </div>
-          <div className="text-gray-600">
+          <div className=" text-gray-600">
             <span className="font-medium text-primary-500 hover:text-primary-700">
               Click to upload
             </span>{" "}
             or drag and drop
           </div>
           <p className="text-sm text-gray-500">
-            SVG, PNG, JPG or GIF (max. 800x400px)
+            {/* SVG, PNG, JPG or GIF (max. 800x400px) */}
           </p>
         </div>
         <input
