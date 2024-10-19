@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { JWT } from "../Constants/constants";
-import { MdOutlineArrowForwardIos, MdOutlineArrowBackIosNew } from "react-icons/md";
+import {
+  MdOutlineArrowForwardIos,
+  MdOutlineArrowBackIosNew,
+} from "react-icons/md";
 
 export default function IssueDoc({
   get_ChainID,
@@ -11,6 +14,7 @@ export default function IssueDoc({
   setMessage,
   isFileHashed,
   file,
+  setFile,
   loading,
   setLoading,
   handleFileChange,
@@ -56,7 +60,7 @@ export default function IssueDoc({
       const data = await response.json();
       const fileCid = data.IpfsHash; // Pinata returns 'IpfsHash'
       setCid(fileCid); // Save CID from Pinata response
-      setMessage(`File uploaded successfully! CID: ${fileCid}`);
+      setMessage(`File uploaded to Pinata!`);
       setLoading(false);
       console.log(`File CID from Pinata: ${fileCid}`);
       return fileCid;
@@ -82,29 +86,28 @@ export default function IssueDoc({
       console.log(`File CID from Pinata: ${uploadedCid}`);
 
       if (fileHash && fileHash.length > 4) {
-        // Initialize web3 contract
-        // const web3 = new Web3(Web3.givenProvider);
-        // const contract = new web3.eth.Contract(
-        //   window.CONTRACT.abi, // Assuming window.CONTRACT holds the ABI and contract address
-        //   window.CONTRACT.address
-        // );
-
-        // Call contract method
         contract.methods
-          .addDocHash(fileHash, uploadedCid, name, desc, rollno,email)
+          .addDocHash(fileHash, uploadedCid, name, desc, rollno, email)
           .send({ from: userAddress })
           .on("transactionHash", function (_hash) {
             setMessage("Please wait for transaction to be mined...");
+          
           })
           .on("receipt", function (receipt) {
             console.log("Transaction receipt:", receipt);
             setMessage("Transaction successful!");
             setLoading(false);
+            setName("");
+            setDesc("");
+            setRollno("");
+            setEmail("");
+            setFile(null);
           })
           .on("error", function (error) {
             console.error("Error in transaction", error);
             setMessage(`Error: ${error.message} 😏`);
             setLoading(false);
+           
           });
       }
     } catch (error) {
@@ -184,7 +187,8 @@ export default function IssueDoc({
               type="text"
               id="example7"
               onChange={(e) => setName(e.target.value)}
-              class="block h-[8vh] w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+              value={name}
+              class="block h-[8vh] px-4 w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
               placeholder="John Mark"
             />
           </div>
@@ -196,7 +200,8 @@ export default function IssueDoc({
               type="text"
               id="example8"
               onChange={(e) => setRollno(e.target.value)}
-              class="block h-[8vh] w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+              value={rollno}
+              class="block h-[8vh] px-4 w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
               placeholder="123ABC"
             />
           </div>
@@ -208,7 +213,8 @@ export default function IssueDoc({
               type="text"
               id="example8"
               onChange={(e) => setEmail(e.target.value)}
-              class="block h-[8vh] w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+              value={email}
+              class="block h-[8vh] px-4 w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
               placeholder="abc@gmail.com"
             />
           </div>
@@ -220,7 +226,8 @@ export default function IssueDoc({
               type="text"
               id="example9"
               onChange={(e) => setDesc(e.target.value)}
-              class=" col-span-10 block h-[8vh] w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+              value={desc}
+              class=" col-span-10 block h-[8vh] px-4 w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
               placeholder="Bachelors of Science"
             />
           </div>
@@ -251,12 +258,18 @@ export default function IssueDoc({
                     />
                   </svg>
                 </div>
-                <div className=" text-gray-600">
-                  <span className="font-medium text-primary-500 hover:text-primary-700">
-                    Click to upload
-                  </span>{" "}
-                  or drag and drop
-                </div>
+                {file ? (
+                  <p className="text-xs h-10 font-medium hover:text-primary-700 flex items-center">
+                    {file.name}
+                  </p>
+                ) : (
+                  <div className=" text-gray-600">
+                    <strong className="font-medium text-primary-500 hover:text-primary-700 mr-1">
+                      Click to upload
+                    </strong>
+                    or drag and drop
+                  </div>
+                )}
                 <p className="text-sm text-gray-500">
                   {/* SVG, PNG, JPG or GIF (max. 800x400px) */}
                 </p>
@@ -272,15 +285,15 @@ export default function IssueDoc({
         </div>
       </form>
       <div>
-        {fileHash && (
+        {/* {fileHash && (
           <div className="text-center mt-4">
             <h5 className="text-info">Document Hash: {fileHash}</h5>
           </div>
-        )}
-        <div className="text-center h-3 mt-4 flex justify-center items-center ">
-          {!message && <p className="text-sm">{message}</p>}
+        )} */}
+        <div className="text-center h-10 my-2 flex justify-center items-center ">
+          {message && <p className="text-sm">{message}</p>}
         </div>
-        <div className="flex flex-wrap justify-center gap-5 mt-6">
+        <div className="flex flex-wrap items-center justify-center gap-5">
           <button
             type="button"
             onClick={sendHash}

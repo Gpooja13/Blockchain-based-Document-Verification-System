@@ -39,7 +39,7 @@ export default function Modal({ showModal, setShowModal, deleteExporter }) {
                       Delete Authority
                     </h3>
                     <div className="mt-2 text-sm text-secondary-500">
-                      Are you sure you want to delete this post? This action
+                      Are you sure you want to delete this Authority? This action
                       cannot be undone.
                     </div>
                   </div>

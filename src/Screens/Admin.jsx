@@ -8,11 +8,11 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
   const [info, setInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const [logs, setLogs] = useState([]);
   const [delLogs, setDelLogs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [delAddress, setDelAddress] = useState("");
+  const [refreshLog, setRefreshLog] = useState(false);
 
   // Fetch past events when the component mounts
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
         });
 
         // Only update state if the component is still mounted
-        console.log(pastEvents);
+        console.log("added:", pastEvents);
         setLogs(pastEvents);
 
         const pastDelEvents = await contract.getPastEvents("ExporterDeleted", {
@@ -37,8 +37,8 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
           fromBlock: 0,
           toBlock: "latest",
         });
-        console.log(pastDelEvents);
-        setLogs(pastDelEvents);
+        console.log("deleted:", pastDelEvents);
+        setDelLogs(pastDelEvents);
       } catch (err) {
         console.error("Error fetching past events:", err);
       }
@@ -50,13 +50,12 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
     return () => {
       isMounted = false; // Cleanup on unmount
     };
-  }, [contract]);
+  }, [refreshLog]);
 
   const addExporter = async () => {
     if (info && address) {
       setLoading(true);
-      setMessage("");
-      setError("");
+      setMessage("Please confirm the transaction 😕...");
 
       await get_ChainID(); // Ensure ChainID is retrieved
 
@@ -65,15 +64,18 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
           .add_Exporter(address, info)
           .send({ from: userAddress });
         console.log(result);
-        setMessage("Exporter Added to the Blockchain.");
+        setMessage("Exporter Added to the Blockchain 🙂");
+        setRefreshLog(true);
+        setAddress("");
+        setInfo("");
       } catch (err) {
         console.error(err.message);
-        setError("An error occurred during the transaction.");
+        setMessage("An error occurred during the transaction.");
       } finally {
         setLoading(false);
       }
     } else {
-      setError("You need to provide address & information to add.");
+      setMessage("You need to provide address & information to add.");
       console.log("You need to provide address & information to add.");
     }
   };
@@ -82,7 +84,6 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
     if (delAddress) {
       setLoading(true);
       setMessage("Please confirm the transaction 😕...");
-      setError("");
 
       await get_ChainID(); // Ensure ChainID is retrieved
 
@@ -91,14 +92,15 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
           .delete_Exporter(delAddress)
           .send({ from: userAddress });
         setMessage("Exporter Deleted Successfully 🙂");
+        setRefreshLog(true);
       } catch (err) {
         console.error(err.message);
-        setError(err.message);
+        setMessage(err.message);
       } finally {
         setLoading(false);
       }
     } else {
-      setError("You need to provide an address to delete 👍");
+      setMessage("You need to provide an address to delete 👍");
     }
   };
 
@@ -151,7 +153,6 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
             </div>
             <div className="text-center h-3 mt-4 flex justify-center items-center ">
               {message && <p className="text-sm">{message}</p>}
-              {error && <p className="text-sm">{error}</p>}
             </div>
             <div className="flex flex-wrap items-center justify-center gap-5">
               <button
@@ -181,8 +182,10 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
           <hr class="my-5 h-px border-0 bg-gray-300" />
 
           <div className="mt-5 h-[40vh] overflow-y-auto thin-scrollbar">
-            {logs.length===0 ? (
-              <p className="w-full flex justify-center h-1/2 items-center">No Records</p>
+            {logs.length === 0 ? (
+              <p className="w-full flex justify-center h-1/2 items-center">
+                No Records
+              </p>
             ) : (
               <ul>
                 {logs

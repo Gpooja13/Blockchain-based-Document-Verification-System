@@ -160,6 +160,7 @@ const App = () => {
                   setMessage={setMessage}
                   isFileHashed={isFileHashed}
                   file={file}
+                  setFile={setFile}
                   loading={loading}
                   setLoading={setLoading}
                 />

@@ -30,10 +30,10 @@ export default function SideBar({ userAddress, chain, userBalance }) {
   }, [location.pathname]);
 
   return (
-    <div className="z-10">
+    <div className="z-10 drop-shadow-sm">
       <aside className="w-72 flex-none bg-blue-200 p-2">
         <div className="flex flex-wrap items-center justify-center gap-3 h-[15vh] border-b-2 border-white">
-          <div className="h-14 w-14 border-white border-2  rounded-full flex items-center justify-center">
+          <div className="h-12 w-12 border-white border-2  rounded-full flex items-center justify-center">
             <GrConnect className="h-[70%] w-[70%] object-center" />
           </div>
           <div>
