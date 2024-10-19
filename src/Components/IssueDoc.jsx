@@ -24,6 +24,7 @@ export default function IssueDoc({
   const [name, setName] = useState("");
   const [rollno, setRollno] = useState("");
   const [desc, setDesc] = useState("");
+  const [email, setEmail] = useState("");
 
   const uploadFileToPinata = async () => {
     if (!file) {
@@ -176,8 +177,8 @@ export default function IssueDoc({
       </div>
       <hr class="mt-5 h-px border-0 bg-gray-300" />
       <form action="" class="space-y-5 flex items-baseline justify-center ">
-        <div class="grid grid-cols-14 gap-5 w-[35vw] ">
-          <div class="col-span-5">
+        <div class="grid grid-cols-6 gap-5 w-[48vw] ">
+          <div class="col-span-2">
             <label for="example7" class="mb-1 block font-medium text-gray-700">
               Name
             </label>
@@ -189,7 +190,7 @@ export default function IssueDoc({
               placeholder="John Mark"
             />
           </div>
-          <div class="col-span-5">
+          <div class="col-span-2">
             <label for="example8" class="mb-1 block font-medium text-gray-700">
               Id
             </label>
@@ -201,7 +202,19 @@ export default function IssueDoc({
               placeholder="123ABC"
             />
           </div>
-          <div class="col-span-10">
+          <div class="col-span-2">
+            <label for="example8" class="mb-1 block font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              type="text"
+              id="example8"
+              onChange={(e) => setEmail(e.target.value)}
+              class="block h-[8vh] w-full rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+              placeholder="abc@gmail.com"
+            />
+          </div>
+          <div class="col-span-6">
             <label for="example9" class="mb-1 block font-medium text-gray-700">
               Description
             </label>
@@ -213,52 +226,51 @@ export default function IssueDoc({
               placeholder="Bachelors of Science"
             />
           </div>
-       
         </div>
         <div className="ml-5">
-        <div className="mx-auto w-[20vw] ">
-      <label
-        htmlFor="doc-file"
-        className="mb-1 block font-medium text-gray-700"
-      >
-        Upload file
-      </label>
-      <label className="flex w-full cursor-pointer appearance-none items-center justify-center rounded-md border-2 border-dashed border-gray-200 p-6 transition-all hover:border-primary-300">
-        <div className="space-y-1 text-center">
-          <div className="mx-auto my-1 h-10 inline-flex w-10 items-center justify-center rounded-full bg-gray-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="h-6 w-6 text-gray-500"
+          <div className="mx-auto w-[18vw] ">
+            <label
+              htmlFor="doc-file"
+              className="mb-1 block font-medium text-gray-700"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+              Upload file
+            </label>
+            <label className="flex w-full cursor-pointer appearance-none items-center justify-center rounded-md border-2 border-dashed border-gray-200 p-6 transition-all hover:border-primary-300">
+              <div className="space-y-1 text-center">
+                <div className="mx-auto my-1 h-10 inline-flex w-10 items-center justify-center rounded-full bg-gray-100">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="h-6 w-6 text-gray-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                    />
+                  </svg>
+                </div>
+                <div className=" text-gray-600">
+                  <span className="font-medium text-primary-500 hover:text-primary-700">
+                    Click to upload
+                  </span>{" "}
+                  or drag and drop
+                </div>
+                <p className="text-sm text-gray-500">
+                  {/* SVG, PNG, JPG or GIF (max. 800x400px) */}
+                </p>
+              </div>
+              <input
+                id="doc-file"
+                type="file"
+                className="sr-only"
+                onChange={handleFileChange}
               />
-            </svg>
+            </label>
           </div>
-          <div className=" text-gray-600">
-            <span className="font-medium text-primary-500 hover:text-primary-700">
-              Click to upload
-            </span>{" "}
-            or drag and drop
-          </div>
-          <p className="text-sm text-gray-500">
-            {/* SVG, PNG, JPG or GIF (max. 800x400px) */}
-          </p>
-        </div>
-        <input
-          id="doc-file"
-          type="file"
-          className="sr-only"
-          onChange={handleFileChange}
-        />
-      </label>
-    </div>
         </div>
       </form>
       <div>
@@ -267,12 +279,9 @@ export default function IssueDoc({
             <h5 className="text-info">Document Hash: {fileHash}</h5>
           </div>
         )}
-
-        {message && (
-          <div className="text-center mt-4">
-            <h5 className="text-warning">{message}</h5>
-          </div>
-        )}
+        <div className="text-center h-3 mt-4 flex justify-center items-center ">
+          {!message && <p className="text-sm">{message}</p>}
+        </div>
         <div className="flex flex-wrap justify-center gap-5 mt-6">
           <button
             type="button"

@@ -168,7 +168,7 @@ export default function Verify({
       <div className="flex justify-center items-center px-10 h-[80vh]">
         <div className=" w-[50%] h-[70vh] bg-white p-10 mr-4 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
-            <h2 className="font-semibold text-2xl">Find Doc</h2>
+            <h2 className="font-semibold text-2xl">Verify Document</h2>
           </div>
           <hr class="my-5 h-px border-0 bg-gray-300" />
 
@@ -217,11 +217,15 @@ export default function Verify({
               </label>
             </div>
 
-            <div>
-             
-              {message && <div className="text-red-500">{message}</div>}
-               <div>{printVerificationInfo()}</div>
+            <div className="text-center h-3 mt-4 flex justify-center items-center ">
+              {!message && (
+                <>
+                  <p className="text-sm">{message}jkjhjh</p>
+                  <div>{printVerificationInfo()}</div>
+                </>
+              )}
             </div>
+
             <div
               className="flex flex-wrap items-center justify-center mt-10 gap-5"
               style={{ marginTop: "40px" }}
@@ -259,7 +263,7 @@ export default function Verify({
             </h4>
             <p>
               <strong className="text-gray-700">Transaction Id: </strong>
-              fjhfj
+              123ABC
             </p>
             <p>
               <strong className="text-gray-700">Name: </strong> Pooja Gupta

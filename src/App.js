@@ -20,6 +20,8 @@ const App = () => {
   const [isFileHashed, setIsFileHashed] = useState(false);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userBalance, setUserBalance] = useState(null);
+  const [chain, setChain] = useState(null);
 
   const get_ChainID = async () => {
     if (window.ethereum) {
@@ -28,6 +30,7 @@ const App = () => {
           method: "eth_chainId",
         });
         console.log("Chain ID:", chainId);
+        setChain(chainId);
         return chainId;
       } catch (error) {
         console.error("Error getting chain ID:", error);
@@ -81,6 +84,18 @@ const App = () => {
     }
   };
 
+  const getEthBalance = async () => {
+    try {
+      const web3 = new Web3(Web3.givenProvider);
+      const balance = await web3.eth.getBalance(userAddress);
+      const formattedBalance = web3.utils.fromWei(balance).substr(0, 6);
+      setUserBalance(formattedBalance);
+    } catch (err) {
+      console.error("Error fetching balance:", err);
+      setUserBalance("n/a");
+    }
+  };
+
   useEffect(() => {
     const initializeWeb3 = async () => {
       if (typeof window.ethereum !== "undefined") {
@@ -100,6 +115,7 @@ const App = () => {
             contractAddress
           );
           setContract(contractInstance);
+          getEthBalance();
         } catch (error) {
           console.error("Error initializing contract:", error);
         }
@@ -116,7 +132,7 @@ const App = () => {
       <div>
         <Navbar />
         <div className="flex h-[90vh]">
-          <SideBar />
+          <SideBar userAddress={userAddress} chain={chain} userBalance={userBalance} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
@@ -164,7 +180,7 @@ const App = () => {
                 />
               }
             />
-            <Route path="/view" element={<View />} />
+            <Route path="/view" element={<View message={message} setMessage={setMessage} />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
