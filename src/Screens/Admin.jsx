@@ -10,7 +10,9 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [logs, setLogs] = useState([]);
+  const [delLogs, setDelLogs] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [delAddress, setDelAddress] = useState("");
 
   // Fetch past events when the component mounts
   useEffect(() => {
@@ -29,6 +31,14 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
         // Only update state if the component is still mounted
         console.log(pastEvents);
         setLogs(pastEvents);
+
+        const pastDelEvents = await contract.getPastEvents("ExporterDeleted", {
+          filter: {},
+          fromBlock: 0,
+          toBlock: "latest",
+        });
+        console.log(pastDelEvents);
+        setLogs(pastDelEvents);
       } catch (err) {
         console.error("Error fetching past events:", err);
       }
@@ -55,7 +65,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
           .add_Exporter(address, info)
           .send({ from: userAddress });
         console.log(result);
-        setMessage("Exporter Added to the Blockchain 😇");
+        setMessage("Exporter Added to the Blockchain.");
       } catch (err) {
         console.error(err.message);
         setError("An error occurred during the transaction.");
@@ -69,7 +79,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
   };
 
   const deleteExporter = async () => {
-    if (address) {
+    if (delAddress) {
       setLoading(true);
       setMessage("Please confirm the transaction 😕...");
       setError("");
@@ -78,7 +88,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
 
       try {
         await contract.methods
-          .delete_Exporter(address)
+          .delete_Exporter(delAddress)
           .send({ from: userAddress });
         setMessage("Exporter Deleted Successfully 🙂");
       } catch (err) {
@@ -100,6 +110,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
           showModal={showModal}
           setShowModal={setShowModal}
           deleteExporter={deleteExporter}
+          delAddress={delAddress}
         />
         <div className=" w-[50%] h-[65vh] bg-white p-10 mt-10 mr-4 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
@@ -139,9 +150,8 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
               />
             </div>
             <div className="text-center h-3 mt-4 flex justify-center items-center ">
-              {!message && (
-              <p className="text-sm">{message}</p>
-              )}
+              {message && <p className="text-sm">{message}</p>}
+              {error && <p className="text-sm">{error}</p>}
             </div>
             <div className="flex flex-wrap items-center justify-center gap-5">
               <button
@@ -171,81 +181,51 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
           <hr class="my-5 h-px border-0 bg-gray-300" />
 
           <div className="mt-5 h-[40vh] overflow-y-auto thin-scrollbar">
-            <ul>
-              {logs.map((log, index) => (
-                <>
-                  <li key={index} className="border-b pt-2 pb-5 mb-2">
-                    <p>
-                      <strong>Address: </strong>
-                      {log.returnValues.exporterAddress}
-                    </p>
-                    <p>
-                      <strong>Info: </strong> {log.returnValues.info}
-                    </p>
-                    <div className="flex justify-between">
+            {logs.length===0 ? (
+              <p className="w-full flex justify-center h-1/2 items-center">No Records</p>
+            ) : (
+              <ul>
+                {logs
+                  .filter(
+                    (log) =>
+                      !delLogs.some(
+                        (delLog) =>
+                          delLog.returnValues.exporterId ===
+                          log.returnValues.exporterId
+                      )
+                  )
+                  .map((log, index) => (
+                    <li key={index} className="border-b pt-2 pb-5 mb-2">
                       <p>
-                        <strong>Registraton Date: </strong>
-                        {new Date(
-                          Number(log.returnValues.minetime) * 1000
-                        ).toLocaleDateString()}
+                        <strong>Address: </strong>
+                        {log.returnValues.exporterAddress}
                       </p>
-                      <button onClick={() => setShowModal(true)}>
-                        <MdDeleteOutline
-                          fontSize={"28px"}
-                          className="text-gray-300 hover:text-red-600 mr-5"
-                        />
-                      </button>
-                    </div>
-                  </li>
-                  <li key={index} className="border-b pt-2 pb-5 mb-2">
-                    <p>
-                      <strong>Address: </strong>
-                      {log.returnValues.exporterAddress}
-                    </p>
-                    <p>
-                      <strong>Info: </strong> {log.returnValues.info}
-                    </p>
-                    <div className="flex justify-between">
                       <p>
-                        <strong>Registraton Date: </strong>
-                        {new Date(
-                          Number(log.returnValues.minetime) * 1000
-                        ).toLocaleDateString()}
+                        <strong>Info: </strong> {log.returnValues.info}
                       </p>
-                      <button onClick={() => setShowModal(true)}>
-                        <MdDeleteOutline
-                          fontSize={"28px"}
-                          className="text-gray-300 hover:text-red-600 mr-5"
-                        />
-                      </button>
-                    </div>
-                  </li>
-                  <li key={index} className="border-b pt-2 pb-5 mb-2">
-                    <p>
-                      <strong>Address: </strong>
-                      {log.returnValues.exporterAddress}
-                    </p>
-                    <p>
-                      <strong>Info: </strong> {log.returnValues.info}
-                    </p>
-                    <div className="flex justify-between">
-                      <p>
-                        <strong>Registraton Date: </strong>
-                        {new Date(
-                          Number(log.returnValues.minetime) * 1000
-                        ).toLocaleDateString()}
-                      </p>
-                      <button onClick={() => setShowModal(true)}>
-                        <MdDeleteOutline
-                          fontSize={"28px"}
-                          className="text-gray-300 hover:text-red-600 mr-5"
-                        />
-                      </button>
-                    </div>
-                  </li>
-                </>
-              ))}
-            </ul>
+                      <div className="flex justify-between">
+                        <p>
+                          <strong>Registration Date: </strong>
+                          {new Date(
+                            Number(log.returnValues.minetime) * 1000
+                          ).toLocaleDateString()}
+                        </p>
+                        <button
+                          onClick={() => {
+                            setDelAddress(log.returnValues.exporterAddress);
+                            setShowModal(true);
+                          }}
+                        >
+                          <MdDeleteOutline
+                            fontSize={"28px"}
+                            className="text-gray-300 hover:text-red-600 mr-5"
+                          />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>

@@ -84,17 +84,19 @@ const App = () => {
     }
   };
 
-  const getEthBalance = async () => {
-    try {
-      const web3 = new Web3(Web3.givenProvider);
-      const balance = await web3.eth.getBalance(userAddress);
-      const formattedBalance = web3.utils.fromWei(balance).substr(0, 6);
-      setUserBalance(formattedBalance);
-    } catch (err) {
-      console.error("Error fetching balance:", err);
-      setUserBalance("n/a");
-    }
-  };
+  const getEthBalance = async (user) => {
+  try {
+    const web3 = new Web3(Web3.givenProvider); // Initialize Web3 with the given provider
+    const balanceInWei = await web3.eth.getBalance(user); // Get balance in Wei
+    const balanceInEther = web3.utils.fromWei(balanceInWei, "ether"); // Convert balance to Ether
+    const formattedBalance = parseFloat(balanceInEther).toFixed(6); // Format to 6 decimal places
+    setUserBalance(formattedBalance); // Set the formatted balance
+  } catch (err) {
+    console.error("Error fetching balance:", err);
+    setUserBalance("n/a"); // Set to "n/a" in case of an error
+  }
+}
+
 
   useEffect(() => {
     const initializeWeb3 = async () => {
@@ -115,7 +117,7 @@ const App = () => {
             contractAddress
           );
           setContract(contractInstance);
-          getEthBalance();
+          getEthBalance(userAddress);
         } catch (error) {
           console.error("Error initializing contract:", error);
         }

@@ -1,7 +1,4 @@
-export const address =
-  // "0xceD8A67782404D830fA4a08b653a98db22A0F472";
-  // "0x3e2e0B3876C16d5e6436e830eB9465668811aD9B";
-"0x99Ffad8b24890339519A249872128f37cBAAf229";
+export const address ="0xE24C3c39F899f6065AF28A1cCd16cBe414C75A17";
 
 export const network = "Example : https://polygon-rpc.com/";
 export const explore = "Example : https://polygonscan.com/";
@@ -45,6 +42,16 @@ export const abi = [
 			{
 				"internalType": "string",
 				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_rollno",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_email",
 				"type": "string"
 			}
 		],
@@ -100,16 +107,16 @@ export const abi = [
 				"type": "bytes32"
 			},
 			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "rollno",
+				"type": "string"
+			},
+			{
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "minetime",
 				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "info",
-				"type": "string"
 			},
 			{
 				"indexed": false,
@@ -127,6 +134,12 @@ export const abi = [
 				"indexed": false,
 				"internalType": "string",
 				"name": "description",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "email",
 				"type": "string"
 			}
 		],
@@ -154,6 +167,12 @@ export const abi = [
 				"internalType": "address",
 				"name": "exporterAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "exporterId",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,
@@ -185,6 +204,12 @@ export const abi = [
 				"internalType": "address",
 				"name": "exporterAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "exporterId",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,
@@ -253,6 +278,11 @@ export const abi = [
 		"outputs": [
 			{
 				"internalType": "uint256",
+				"name": "exporterId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
 				"name": "blockNumber",
 				"type": "uint256"
 			},
@@ -314,6 +344,16 @@ export const abi = [
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -333,6 +373,24 @@ export const abi = [
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nextExporterId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -351,14 +409,12 @@ export const abi = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
+]
 
-
-//Your IPFS api key in ifura.io
-// export const projectId = "28LuNAotbXzcvtpOcE9F8ayKOeP";
+//Your IPFS api key
 export const projectId = "bbf50cad38e80d64ff61";
-//Your api secret in ifura.io
-// export const projectSecret = "3de3d9c099c6c0c168e39b8bc03e2f7a";
+
+//Your IPFS api secret 
 export const projectSecret =
   "0e69db88d05c8e9ab0f37f5dfa9f4b717121c54825fc7a8a96e42b3c384244b8";
 

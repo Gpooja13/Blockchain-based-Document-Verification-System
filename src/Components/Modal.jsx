@@ -8,7 +8,7 @@ export default function Modal({ showModal, setShowModal, deleteExporter }) {
       {/* Modal Overlay */}
       {showModal && (
         <div>
-          <div className="fixed inset-0 z-10 bg-slate-600 bg-opacity-50"></div>
+          <div className="fixed inset-0 z-50 bg-slate-600 bg-opacity-50"></div>
 
           {/* Modal Box */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">

@@ -217,7 +217,7 @@ export default function Verify({
               </label>
             </div>
 
-            <div className="text-center h-3 mt-4 flex justify-center items-center ">
+            <div className="text-center h-5 mt-4 flex justify-center items-center ">
               {!message && (
                 <>
                   <p className="text-sm">{message}jkjhjh</p>
@@ -227,8 +227,8 @@ export default function Verify({
             </div>
 
             <div
-              className="flex flex-wrap items-center justify-center mt-10 gap-5"
-              style={{ marginTop: "40px" }}
+              className="flex flex-wrap items-center justify-center gap-5"
+              style={{ marginTop: "30px" }}
             >
               <button
                 type="button"

@@ -30,7 +30,7 @@ export default function SideBar({ userAddress, chain, userBalance }) {
   }, [location.pathname]);
 
   return (
-    <div className="z-50">
+    <div className="z-10">
       <aside className="w-72 flex-none bg-blue-200 p-2">
         <div className="flex flex-wrap items-center justify-center gap-3 h-[15vh] border-b-2 border-white">
           <div className="h-14 w-14 border-white border-2  rounded-full flex items-center justify-center">

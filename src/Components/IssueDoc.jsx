@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { JWT } from "../Constants/constants";
-import { MdOutlineArrowForwardIos } from "react-icons/md";
-import { MdOutlineArrowBackIosNew } from "react-icons/md";
-// import Web3 from "web3";
+import { MdOutlineArrowForwardIos, MdOutlineArrowBackIosNew } from "react-icons/md";
 
 export default function IssueDoc({
   get_ChainID,
@@ -93,7 +91,7 @@ export default function IssueDoc({
 
         // Call contract method
         contract.methods
-          .addDocHash(fileHash, uploadedCid, name, desc, rollno)
+          .addDocHash(fileHash, uploadedCid, name, desc, rollno,email)
           .send({ from: userAddress })
           .on("transactionHash", function (_hash) {
             setMessage("Please wait for transaction to be mined...");
