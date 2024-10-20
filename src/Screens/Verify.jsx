@@ -68,7 +68,7 @@ export default function Verify({
     if (fileHash) {
       try {
         const result = await contract.methods
-          .findDocHash(fileHash)
+          .verifyDocHash(fileHash)
           .call({ from: userAddress });
         console.log(result);
         if (result[0] !== 0n && result[0] !== 0n) {

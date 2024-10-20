@@ -23,14 +23,6 @@ export const GlobalContextProvider = ({ children }) => {
     document.body.removeChild(link);
   };
 
-  // const convertToString = (word) => {
-  //   let web3;
-  //   if (window.ethereum) {
-  //     // Use MetaMask's provider
-  //     web3 = new Web3(window.ethereum);
-  //     return web3.utils.hexToUtf8(word);
-  //   }
-  // };
 
   return (
     <GlobalContext.Provider
@@ -41,8 +33,7 @@ export const GlobalContextProvider = ({ children }) => {
         setShowModal,
 
         viewDocumentInNewTab,
-        downloadDocument,
-        // convertToString,
+        downloadDocument
       }}
     >
       {children}

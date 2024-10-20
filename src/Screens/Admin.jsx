@@ -13,44 +13,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
   const [showModal, setShowModal] = useState(false);
   const [delAddress, setDelAddress] = useState("");
   const [refreshLog, setRefreshLog] = useState(false);
-
-  // Fetch past events when the component mounts
-  useEffect(() => {
-    let isMounted = true; // Track if component is mounted
-
-    const fetchEvents = async () => {
-      if (!isMounted) return; // Check if the component is still mounted
-
-      try {
-        const pastEvents = await contract.getPastEvents("ExporterAdded", {
-          filter: {},
-          fromBlock: 0,
-          toBlock: "latest",
-        });
-
-        // Only update state if the component is still mounted
-        console.log("added:", pastEvents);
-        setLogs(pastEvents);
-
-        const pastDelEvents = await contract.getPastEvents("ExporterDeleted", {
-          filter: {},
-          fromBlock: 0,
-          toBlock: "latest",
-        });
-        console.log("deleted:", pastDelEvents);
-        setDelLogs(pastDelEvents);
-      } catch (err) {
-        console.error("Error fetching past events:", err);
-      }
-    };
-
-    fetchEvents();
-
-    // Cleanup function to set isMounted to false
-    return () => {
-      isMounted = false; // Cleanup on unmount
-    };
-  }, [refreshLog]);
+  const [exporterCount, setExporterCount] = useState("");
 
   const addExporter = async () => {
     if (info && address) {
@@ -103,6 +66,64 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
       setMessage("You need to provide an address to delete 👍");
     }
   };
+
+  const getAuthorityCount = async (exporterAddress) => {
+    try {
+      // Ensure the contract is available
+      if (!contract) {
+        throw new Error("Smart contract is not initialized.");
+      }
+
+      // Call the getExporterInfo function from the contract
+      const exportersCount = await contract.methods.count_Exporters().call();
+      // Set the values to state
+      setExporterCount(exportersCount);
+      
+    } catch (error) {
+      // Handle any errors that occur during the contract interaction
+      console.error("Error fetching exporter information:", error.message);
+      throw error;
+    }
+  };
+
+  // Fetch past events when the component mounts
+  useEffect(() => {
+    let isMounted = true; // Track if component is mounted
+
+    const fetchEvents = async () => {
+      if (!isMounted) return; // Check if the component is still mounted
+
+      try {
+        const pastEvents = await contract.getPastEvents("ExporterAdded", {
+          filter: {},
+          fromBlock: 0,
+          toBlock: "latest",
+        });
+
+        // Only update state if the component is still mounted
+        console.log("added:", pastEvents);
+        setLogs(pastEvents);
+
+        const pastDelEvents = await contract.getPastEvents("ExporterDeleted", {
+          filter: {},
+          fromBlock: 0,
+          toBlock: "latest",
+        });
+        console.log("deleted:", pastDelEvents);
+        setDelLogs(pastDelEvents);
+      } catch (err) {
+        console.error("Error fetching past events:", err);
+      }
+    };
+
+    fetchEvents();
+    getAuthorityCount();
+
+    // Cleanup function to set isMounted to false
+    return () => {
+      isMounted = false; // Cleanup on unmount
+    };
+  }, [refreshLog]);
 
   return (
     <div className="bg-gray-200">
@@ -177,13 +198,13 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
         </div>
         <div className=" w-[50%] h-[65vh] bg-white py-10 ml-4 pl-10 pr-8 mt-10 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
-            <h2 className="font-semibold text-2xl">View Logs</h2>
+            <h2 className="font-semibold text-2xl">{`View Logs (${exporterCount})`}</h2>
           </div>
 
           <hr class="my-5 h-px border-0 bg-gray-300" />
 
           <div className="mt-5 h-[40vh] overflow-y-auto thin-scrollbar">
-            {logs.length === 0 ? (
+            {exporterCount.length === 0 ? (
               <p className="w-full flex justify-center h-1/2 items-center">
                 No Records
               </p>

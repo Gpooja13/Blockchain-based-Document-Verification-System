@@ -90,7 +90,7 @@ export default function Upload({
               className="flex items-center justify-center h-full"
               style={{ width: `${wrapperWidth}px` }}
             >
-              <ViewIssued togglePage={togglePage} currentPage={currentPage} />
+              <ViewIssued togglePage={togglePage} currentPage={currentPage} contract={contract} userAddress={userAddress}/>
             </div>
           </Transition>
 

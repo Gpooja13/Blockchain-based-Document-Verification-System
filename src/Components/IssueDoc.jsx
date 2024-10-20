@@ -27,7 +27,7 @@ export default function IssueDoc({
   const [rollno, setRollno] = useState("");
   const [desc, setDesc] = useState("");
   const [email, setEmail] = useState("");
-  const { issueEvents,setIssueEvents } = useGlobalContext();
+  const { issueEvents, setIssueEvents } = useGlobalContext();
 
   const uploadFileToPinata = async () => {
     if (!file) {
@@ -92,7 +92,6 @@ export default function IssueDoc({
           .send({ from: userAddress })
           .on("transactionHash", function (_hash) {
             setMessage("Please wait for transaction to be mined...");
-          
           })
           .on("receipt", function (receipt) {
             console.log("Transaction receipt:", receipt);
@@ -108,7 +107,6 @@ export default function IssueDoc({
             console.error("Error in transaction", error);
             setMessage(`Error: ${error.message} 😏`);
             setLoading(false);
-           
           });
       }
     } catch (error) {
@@ -117,6 +115,38 @@ export default function IssueDoc({
       setLoading(false);
     }
   };
+
+  // const deleteHash = async () => {
+  //   setLoading(true);
+  //   setMessage("Please confirm the transaction 🙂");
+
+  //   try {
+  //     if (hashedFile) {
+  //       await contract.methods
+  //         .deleteHash(hashedFile)
+  //         .send({ from: userAddress })
+  //         .on("transactionHash", (hash) => {
+  //           setMessage("Please wait for the transaction to be mined 😴");
+  //         })
+  //         .on("receipt", (receipt) => {
+  //           setMessage("Document Deleted !");
+  //           setLoading(false);
+  //         })
+  //         .on("confirmation", (confirmationNr) => {
+  //           console.log(confirmationNr);
+  //         })
+  //         .on("error", (error) => {
+  //           console.error(error.message);
+  //           setMessage(error.message);
+  //           setLoading(false);
+  //         });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in deleteHash:", error);
+  //     setMessage("An error occurred while deleting the document.");
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     let isMounted = true; // Track if component is mounted
@@ -134,8 +164,6 @@ export default function IssueDoc({
         console.log("a", addHashEvents);
 
         setIssueEvents(addHashEvents);
-
-        console.log(issueEvents);
       } catch (error) {
         console.error("Error fetching past events:", error);
         setMessage("Error fetching events. Please try again later.");
