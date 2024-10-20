@@ -11,6 +11,7 @@ import Web3 from "web3";
 import Contact from "./Screens/Contact";
 import About from "./Screens/About";
 import View from "./Screens/View";
+import { GlobalContextProvider } from "../src/context/context";
 
 const App = () => {
   const [contract, setContract] = useState(null);
@@ -130,6 +131,7 @@ const App = () => {
   }, []);
 
   return (
+    <GlobalContextProvider>
     <Router>
       <div>
         <Navbar />
@@ -190,6 +192,7 @@ const App = () => {
         </div>
       </div>
     </Router>
+    </GlobalContextProvider>
   );
 };
 

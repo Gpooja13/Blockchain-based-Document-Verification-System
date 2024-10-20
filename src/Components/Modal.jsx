@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function Modal({ showModal, setShowModal, deleteExporter }) {
+export default function Modal({ showModal, setShowModal, deleteFunction,title }) {
   // React state to manage modal visibility
 
   return (
@@ -36,11 +36,11 @@ export default function Modal({ showModal, setShowModal, deleteExporter }) {
                   {/* Modal Title and Content */}
                   <div>
                     <h3 className="text-lg font-medium text-secondary-900">
-                      Delete Authority
+                      {`Delete ${title}`}
                     </h3>
                     <div className="mt-2 text-sm text-secondary-500">
-                      Are you sure you want to delete this Authority? This action
-                      cannot be undone.
+                      {`Are you sure you want to delete this ${title}? This action
+                      cannot be undone.`}
                     </div>
                   </div>
                 </div>
@@ -57,7 +57,7 @@ export default function Modal({ showModal, setShowModal, deleteExporter }) {
                   <button
                     type="button"
                     onClick={() => {
-                      deleteExporter();
+                      deleteFunction();
                       setShowModal(false);
                     }}
                     className="flex-1 rounded-lg border border-red-500 bg-red-500 px-4 py-2 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-red-700 hover:bg-red-700 focus:ring focus:ring-red-200 disabled:cursor-not-allowed disabled:border-red-300 disabled:bg-red-300"

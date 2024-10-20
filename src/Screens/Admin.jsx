@@ -111,8 +111,9 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
         <Modal
           showModal={showModal}
           setShowModal={setShowModal}
-          deleteExporter={deleteExporter}
+          deleteFunction={deleteExporter}
           delAddress={delAddress}
+          title={"Authority"}
         />
         <div className=" w-[50%] h-[65vh] bg-white p-10 mt-10 mr-4 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
@@ -221,7 +222,7 @@ export default function Admin({ get_ChainID, contract, userAddress }) {
                         >
                           <MdDeleteOutline
                             fontSize={"28px"}
-                            className="text-gray-300 hover:text-red-600 mr-5"
+                            className="text-gray-400 hover:text-red-600 mr-5"
                           />
                         </button>
                       </div>

@@ -4,6 +4,7 @@ import {
   MdOutlineArrowForwardIos,
   MdOutlineArrowBackIosNew,
 } from "react-icons/md";
+import { useGlobalContext } from "../context/context";
 
 export default function IssueDoc({
   get_ChainID,
@@ -22,11 +23,11 @@ export default function IssueDoc({
   currentPage,
 }) {
   const [cid, setCid] = useState(null);
-  const [events, setEvents] = useState([]);
   const [name, setName] = useState("");
   const [rollno, setRollno] = useState("");
   const [desc, setDesc] = useState("");
   const [email, setEmail] = useState("");
+  const { issueEvents,setIssueEvents } = useGlobalContext();
 
   const uploadFileToPinata = async () => {
     if (!file) {
@@ -132,9 +133,9 @@ export default function IssueDoc({
         });
         console.log("a", addHashEvents);
 
-        setEvents(addHashEvents);
+        setIssueEvents(addHashEvents);
 
-        console.log(events);
+        console.log(issueEvents);
       } catch (error) {
         console.error("Error fetching past events:", error);
         setMessage("Error fetching events. Please try again later.");
