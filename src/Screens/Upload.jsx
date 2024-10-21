@@ -3,24 +3,26 @@ import { Transition } from "@headlessui/react";
 import IssueDoc from "../Components/IssueDoc";
 import ViewIssued from "../Components/ViewIssued";
 import Heading from "../Components/Heading";
+import { useGlobalContext } from "../context/context";
 
-export default function Upload({
-  get_ChainID,
-  userAddress,
-  contract,
-  fileHash,
-  message,
-  setMessage,
-  isFileHashed,
-  file,
-  loading,
-  setLoading,
-  handleFileChange,
-}) {
+export default function Upload() {
   const [currentPage, setCurrentPage] = useState(0); // Toggle between two pages
   const [direction, setDirection] = useState("right"); // Slide direction
   const wrapper = useRef(null);
   const [wrapperWidth, setWrapperWidth] = useState(0);
+  const {
+    get_ChainID,
+    userAddress,
+    contract,
+    fileHash,
+    message,
+    setMessage,
+    isFileHashed,
+    file,
+    loading,
+    setLoading,
+    handleFileChange,
+  } = useGlobalContext();
 
   // Toggle between pages and set slide direction
   const togglePage = () => {
@@ -60,17 +62,6 @@ export default function Upload({
               style={{ width: `${wrapperWidth}px` }}
             >
               <IssueDoc
-                get_ChainID={get_ChainID}
-                contract={contract}
-                userAddress={userAddress}
-                handleFileChange={handleFileChange}
-                fileHash={fileHash}
-                message={message}
-                setMessage={setMessage}
-                isFileHashed={isFileHashed}
-                file={file}
-                loading={loading}
-                setLoading={setLoading}
                 togglePage={togglePage}
                 currentPage={currentPage}
               />
@@ -90,7 +81,11 @@ export default function Upload({
               className="flex items-center justify-center h-full"
               style={{ width: `${wrapperWidth}px` }}
             >
-              <ViewIssued togglePage={togglePage} currentPage={currentPage} contract={contract} userAddress={userAddress}/>
+              <ViewIssued
+                togglePage={togglePage}
+                currentPage={currentPage}
+                
+              />
             </div>
           </Transition>
 

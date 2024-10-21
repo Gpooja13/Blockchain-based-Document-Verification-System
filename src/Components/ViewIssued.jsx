@@ -9,22 +9,59 @@ import { useGlobalContext } from "../context/context";
 import { FaExternalLinkAlt, FaDownload } from "react-icons/fa";
 import Modal from "../Components/Modal";
 
-export default function IssueDoc({
-  togglePage,
-  currentPage,
-  contract,
-  userAddress,
-}) {
+export default function ViewIssued({ togglePage, currentPage }) {
   const {
     issueEvents,
     setIssueEvents,
+    delIssueEvents,
+    setDelIssueEvents,
     showModal,
     setShowModal,
     viewDocumentInNewTab,
     downloadDocument,
+    contract,
+    userAddress,
+    message,
+    setMessage,
+    loading,
+    setLoading,
   } = useGlobalContext();
   const [authorityInfo, setAuthorityInfo] = useState(null);
-  const [hashcount, setHashcount] = useState("");
+  const [hashcount, setHashcount] = useState(0);
+  const [delHash, setDelHash] = useState("");
+
+  const deleteHash = async () => {
+    setLoading(true);
+    setMessage("Please confirm the transaction 🙂");
+
+    try {
+      if (delHash) {
+        await contract.methods
+          .deleteHash(delHash)
+          .send({ from: userAddress })
+          .on("transactionHash", (hash) => {
+            setMessage("Please wait for the transaction to be mined 😴");
+          })
+          .on("receipt", (receipt) => {
+            setMessage("Document Deleted !");
+            setLoading(false);
+          })
+          .on("confirmation", (confirmationNr) => {
+            console.log(confirmationNr);
+            setShowModal(false);
+          })
+          .on("error", (error) => {
+            console.error(error.message);
+            setMessage(error.message);
+            setLoading(false);
+          });
+      }
+    } catch (error) {
+      console.error("Error in deleteHash:", error);
+      setMessage("An error occurred while deleting the document.");
+      setLoading(false);
+    }
+  };
 
   const getAuthorityInfo = async (exporterAddress) => {
     try {
@@ -33,16 +70,14 @@ export default function IssueDoc({
         throw new Error("Smart contract is not initialized.");
       }
 
-      // Call the getExporterInfo function from the contract
       const exporterInfo = await contract.methods
         .getExporterInfo(exporterAddress)
         .call();
       const hashesCount = await contract.methods.count_hashes().call();
 
-      setAuthorityInfo(exporterInfo[0]);
+      setAuthorityInfo(exporterInfo);
       setHashcount(hashesCount);
     } catch (error) {
-      // Handle any errors that occur during the contract interaction
       console.error("Error fetching exporter information:", error.message);
       throw error;
     }
@@ -54,13 +89,7 @@ export default function IssueDoc({
 
   return (
     <>
-      <Modal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        // deleteFunction={deleteExporter}
-        // delAddress={delAddress}
-        title={"Record"}
-      />
+      <Modal deleteFunction={deleteHash} delRecord={delHash} title={"Record"} />
       <div class="mx-auto mt-10 bg-white h-[67vh] p-10 rounded-3xl drop-shadow-lg  ">
         <div className="flex justify-center">
           <h3 className=" font-semibold absolute left-0 top-12 ml-10 flex items-center ">
@@ -94,12 +123,21 @@ export default function IssueDoc({
         <hr class="mt-5 h-px border-0 bg-gray-300" />
         <div className="w-[65vw]">
           <div className="mt-5 h-[40vh] overflow-y-auto thin-scrollbar">
-            {hashcount.length === 0 ? (
-              <p className="w-full flex justify-center h-1/2 items-center">"No Records"</p>
+            {hashcount === 0 ? (
+              <p className="w-full flex justify-center h-1/2 items-center">
+                No Records
+              </p>
             ) : (
               <ul>
-                {issueEvents.map((log, index) => (
-                  <>
+                {issueEvents
+                  .filter(
+                    (log) =>
+                      !delIssueEvents.some(
+                        (delLog) =>
+                          delLog.returnValues.minetime === log.returnValues.minetime
+                      )
+                  ) // Filter out deleted events
+                  .map((log, index) => (
                     <li key={index} className="border-b pt-2 pb-5 mb-2">
                       <p>
                         <strong>Name: </strong> {log.returnValues.name}
@@ -111,17 +149,16 @@ export default function IssueDoc({
                         <strong>Email: </strong> {log.returnValues.email}
                       </p>
                       <p>
-                        <strong>Description </strong>{" "}
+                        <strong>Description: </strong>{" "}
                         {log.returnValues.description}
                       </p>
                       <div className="flex justify-between">
                         <p>
-                          <strong>Registraton Date: </strong>
+                          <strong>Registration Date: </strong>
                           {new Date(
                             Number(log.returnValues.minetime) * 1000
                           ).toLocaleDateString()}
                         </p>
-
                         <div className="flex justify-between items-center">
                           <button
                             className="text-gray-400 hover:text-blue-600 mr-5"
@@ -139,7 +176,12 @@ export default function IssueDoc({
                           >
                             <FaDownload fontSize={"20px"} />
                           </button>
-                          <button onClick={() => setShowModal(true)}>
+                          <button
+                            onClick={() => {
+                              setDelHash(log.returnValues.hash);
+                              setShowModal(true);
+                            }}
+                          >
                             <MdDeleteOutline
                               fontSize={"28px"}
                               className="text-gray-400 hover:text-red-600 mr-5"
@@ -148,8 +190,7 @@ export default function IssueDoc({
                         </div>
                       </div>
                     </li>
-                  </>
-                ))}
+                  ))}
               </ul>
             )}
           </div>

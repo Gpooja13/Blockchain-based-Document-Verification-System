@@ -1,10 +1,39 @@
 import React, { useState, useEffect } from "react";
 import Heading from "../Components/Heading";
 import { FaExternalLinkAlt, FaDownload } from "react-icons/fa";
+import { useGlobalContext } from "../context/context";
 
-export default function View({ message, setMessage }) {
+export default function View() {
   const [rollno, setRollno] = useState("");
-  const [email, setEmail] = useState(null);
+  const [email, setEmail] = useState("");
+  const [docInfo, setDocInfo] = useState(null);
+  const { message, setMessage , contract} = useGlobalContext();
+
+  const findDocument = async () => {
+    try {
+      const response = await contract.methods
+        .findDocByEmailAndRollno(email, rollno)
+        .call();
+
+      // Extract the document hash and record details
+      const [docHash, docDetails] = response;
+
+      // Set the document info to be displayed
+      setDocInfo({
+        docHash,
+        issuedBy: docDetails.info,
+        name: docDetails.name,
+        rollno: docDetails.rollno,
+        description: docDetails.description,
+        issueDate: new Date(docDetails.minetime * 1000).toLocaleDateString(),
+        ipfsHash: docDetails.ipfs_hash,
+      });
+    } catch (error) {
+      console.error("Error fetching document:", error);
+      setMessage("Document not found.");
+    }
+  };
+
   return (
     <div className="bg-gray-200">
       <Heading title={"View"} />
@@ -49,7 +78,7 @@ export default function View({ message, setMessage }) {
             </div>
 
             <div className="text-center h-4 mt-4 flex justify-center items-center ">
-              {!message && <p className="text-sm">{message}jbjkgkj</p>}
+              {message && <p className="text-sm">{message}</p>}
             </div>
             <div className="flex flex-wrap items-center justify-center mt-10 gap-5">
               <button
@@ -106,12 +135,11 @@ export default function View({ message, setMessage }) {
                       <FaExternalLinkAlt fontSize={"20px"} />
                     </button>
                     <button className="text-gray-400 hover:text-green-600 mr-5">
-                      <FaDownload fontSize={"20px"}/>
+                      <FaDownload fontSize={"20px"} />
                     </button>
                   </div>
                 </div>
               </li>
-              
             </ul>
           </div>
         </div>

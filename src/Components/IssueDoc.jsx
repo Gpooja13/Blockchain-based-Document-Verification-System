@@ -6,28 +6,30 @@ import {
 } from "react-icons/md";
 import { useGlobalContext } from "../context/context";
 
-export default function IssueDoc({
-  get_ChainID,
-  userAddress,
-  contract,
-  fileHash,
-  message,
-  setMessage,
-  isFileHashed,
-  file,
-  setFile,
-  loading,
-  setLoading,
-  handleFileChange,
-  togglePage,
-  currentPage,
-}) {
+export default function IssueDoc({ togglePage, currentPage }) {
   const [cid, setCid] = useState(null);
   const [name, setName] = useState("");
   const [rollno, setRollno] = useState("");
   const [desc, setDesc] = useState("");
   const [email, setEmail] = useState("");
-  const { issueEvents, setIssueEvents } = useGlobalContext();
+  const {
+    issueEvents,
+    setIssueEvents,
+    delIssueEvents,
+    setDelIssueEvents,
+    get_ChainID,
+    userAddress,
+    contract,
+    fileHash,
+    message,
+    setMessage,
+    isFileHashed,
+    file,
+    setFile,
+    loading,
+    setLoading,
+    handleFileChange,
+  } = useGlobalContext();
 
   const uploadFileToPinata = async () => {
     if (!file) {
@@ -86,9 +88,20 @@ export default function IssueDoc({
       setCid(uploadedCid);
       console.log(`File CID from Pinata: ${uploadedCid}`);
 
-      if (fileHash && fileHash.length > 4) {
+      if (fileHash && fileHash.length > 4 && name && rollno && email && desc) {
+        const record = {
+          blockNumber: 0,
+          minetime: 0,
+          info: " ",
+          ipfs_hash: uploadedCid,
+          rollno: rollno,
+          name: name,
+          description: desc,
+          email: email,
+        };
+
         contract.methods
-          .addDocHash(fileHash, uploadedCid, name, desc, rollno, email)
+          .addDocHash(fileHash, record)
           .send({ from: userAddress })
           .on("transactionHash", function (_hash) {
             setMessage("Please wait for transaction to be mined...");
@@ -108,6 +121,8 @@ export default function IssueDoc({
             setMessage(`Error: ${error.message} 😏`);
             setLoading(false);
           });
+      } else {
+        setMessage("Enter all Details");
       }
     } catch (error) {
       console.error("Error in sendHash function", error);
@@ -116,54 +131,29 @@ export default function IssueDoc({
     }
   };
 
-  // const deleteHash = async () => {
-  //   setLoading(true);
-  //   setMessage("Please confirm the transaction 🙂");
-
-  //   try {
-  //     if (hashedFile) {
-  //       await contract.methods
-  //         .deleteHash(hashedFile)
-  //         .send({ from: userAddress })
-  //         .on("transactionHash", (hash) => {
-  //           setMessage("Please wait for the transaction to be mined 😴");
-  //         })
-  //         .on("receipt", (receipt) => {
-  //           setMessage("Document Deleted !");
-  //           setLoading(false);
-  //         })
-  //         .on("confirmation", (confirmationNr) => {
-  //           console.log(confirmationNr);
-  //         })
-  //         .on("error", (error) => {
-  //           console.error(error.message);
-  //           setMessage(error.message);
-  //           setLoading(false);
-  //         });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error in deleteHash:", error);
-  //     setMessage("An error occurred while deleting the document.");
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
-    let isMounted = true; // Track if component is mounted
+    let isMounted = true;
     const fetchEvents = async () => {
       if (!isMounted) return;
       try {
         setLoading(true);
         setMessage("");
-        // Fetch AddHash events
+
         const addHashEvents = await contract.getPastEvents("AddHash", {
-          filter: { exporter: userAddress }, // Optional: filter by user address
-          fromBlock: 0, // Change as needed
+          filter: { exporter: userAddress },
+          fromBlock: 0,
           toBlock: "latest",
         });
-        console.log("a", addHashEvents);
+        const delHashEvents = await contract.getPastEvents("HashDeleted", {
+          filter: { exporter: userAddress },
+          fromBlock: 0,
+          toBlock: "latest",
+        });
+        console.log("a", delHashEvents);
+        console.log("b", addHashEvents);
 
         setIssueEvents(addHashEvents);
+        setDelIssueEvents(delHashEvents);
       } catch (error) {
         console.error("Error fetching past events:", error);
         setMessage("Error fetching events. Please try again later.");

@@ -1,66 +1,21 @@
 import React, { useState } from "react";
 import Heading from "../Components/Heading";
 import VerificationGif from "../Components/VerificationGif";
-// import Web3 from "web3";
+import { useGlobalContext } from "../context/context";
 
-export default function Verify({
-  contract,
-  userAddress,
-  fileHash,
-  message,
-  setMessage,
-  isFileHashed,
-  file,
-  loading,
-  setLoading,
-  handleFileChange,
-}) {
+export default function Verify() {
   const [verificationInfo, setVerificationInfo] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
-
-  // const getSha3 = async (file) => {
-  //   if (!file) {
-  //     setMessage("No file selected");
-  //     return;
-  //   }
-
-  //   setMessage("Hashing Your Document 😴...");
-  //   const reader = new FileReader();
-
-  //   reader.readAsText(file, "UTF-8");
-
-  //   reader.onload = async (evt) => {
-  //     try {
-  //       const web3 = new Web3(Web3.givenProvider);
-  //       const hashedFile = web3.utils.soliditySha3(evt.target.result);
-
-  //       setFileHash(hashedFile);
-  //       setIsFileHashed(true);
-  //       setMessage("Document Hashed 😎");
-  //       console.log(`Document Hash: ${hashedFile}`);
-  //     } catch (error) {
-  //       console.error("Error hashing the file", error);
-  //       setMessage("Error hashing the file");
-  //     }
-  //   };
-
-  //   reader.onerror = () => {
-  //     setMessage("Error reading the file");
-  //     setFileHash(null);
-  //   };
-  // };
-
-  // const handleFileChange = (e) => {
-  //   const selectedFile = e.target.files[0];
-  //   setFile(selectedFile);
-  //   setMessage("");
-  //   setIsFileHashed(false);
-  //   setFileHash(null);
-
-  //   if (selectedFile) {
-  //     getSha3(selectedFile);
-  //   }
-  // };
+  const {
+    contract,
+    userAddress,
+    fileHash,
+    message,
+    setMessage,
+    loading,
+    setLoading,
+    handleFileChange,
+  } = useGlobalContext();
 
   const verifyHash = async () => {
     setLoading(true);
@@ -220,7 +175,7 @@ export default function Verify({
             <div className="text-center h-5 mt-4 flex justify-center items-center ">
               {!message && (
                 <>
-                  <p className="text-sm">{message}jkjhjh</p>
+                  <p className="text-sm">{message}</p>
                   <div>{printVerificationInfo()}</div>
                 </>
               )}

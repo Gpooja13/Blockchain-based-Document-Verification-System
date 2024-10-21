@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { useGlobalContext } from "../context/context";
 
-export default function Modal({ showModal, setShowModal, deleteFunction,title }) {
-  // React state to manage modal visibility
+export default function Modal({ deleteFunction, title }) {
+  const { setShowModal, showModal, message, loading } = useGlobalContext();
 
   return (
     <div className="h-80">
@@ -13,7 +14,7 @@ export default function Modal({ showModal, setShowModal, deleteFunction,title })
           {/* Modal Box */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
             <div className="mx-auto w-full overflow-hidden rounded-lg bg-white shadow-xl sm:max-w-sm">
-              <div className="relative p-5">
+              <div className="relative p-5 ">
                 <div className="text-center">
                   {/* Modal Icon */}
                   <div className="mx-auto mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-500">
@@ -44,9 +45,11 @@ export default function Modal({ showModal, setShowModal, deleteFunction,title })
                     </div>
                   </div>
                 </div>
-
+                <div className="text-xs flex items-center justify-center h-3 mt-2 mb-3">
+                  {message}
+                </div>
                 {/* Modal Buttons */}
-                <div className="mt-5 flex justify-end gap-3">
+                <div className=" flex justify-end gap-3">
                   <button
                     type="button"
                     onClick={() => setShowModal(false)} // Close modal on cancel
@@ -56,13 +59,11 @@ export default function Modal({ showModal, setShowModal, deleteFunction,title })
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      deleteFunction();
-                      setShowModal(false);
-                    }}
+                    onClick={() => deleteFunction()}
                     className="flex-1 rounded-lg border border-red-500 bg-red-500 px-4 py-2 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-red-700 hover:bg-red-700 focus:ring focus:ring-red-200 disabled:cursor-not-allowed disabled:border-red-300 disabled:bg-red-300"
+                    disabled={loading}
                   >
-                    Delete
+                    {loading ? "Processing..." : "Delete"}
                   </button>
                 </div>
               </div>

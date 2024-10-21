@@ -9,7 +9,12 @@ contract Verification {
     uint16 public count_Exporters = 0;
     uint16 public count_hashes = 0;
     address public owner;
-    uint256 public nextExporterId = 1; // Counter for unique exporter IDs
+
+    struct Exporter_Record {
+        uint256 blockNumber;
+        uint256 minetime;
+        string info;
+    }
 
     struct Record {
         uint256 blockNumber;
@@ -22,17 +27,10 @@ contract Verification {
         string email;
     }
 
-    struct Exporter_Record {
-        uint256 exporterId; // Unique ID for each exporter
-        uint256 blockNumber;
-        uint256 minetime;
-        string info;
-        address registerBy;
-    }
-
     // Mappings for storing document hashes and exporters
     mapping(bytes32 => Record) private docHashes;
     mapping(address => Exporter_Record) public Exporters;
+    mapping(bytes32 => bytes32) private emailRollnoToHash;
 
     //---------------------------------------------------------------------------------------------------------//
     modifier onlyOwner() {
@@ -47,7 +45,7 @@ contract Verification {
 
     modifier authorised_Exporter(bytes32 _doc) {
         require(
-            keccak256(abi.encodePacked(Exporters[msg.sender].info)) == 
+            keccak256(abi.encodePacked(Exporters[msg.sender].info)) ==
                 keccak256(abi.encodePacked(docHashes[_doc].info)),
             "Caller is not authorised to edit this document"
         );
@@ -67,7 +65,6 @@ contract Verification {
     // Event emitted when an exporter is added
     event ExporterAdded(
         address indexed exporterAddress,
-        uint256 exporterId,
         string info,
         uint256 minetime,
         address registerBy
@@ -76,7 +73,7 @@ contract Verification {
     // Event emitted when an exporter is deleted
     event ExporterDeleted(
         address indexed exporterAddress,
-        uint256 exporterId,
+        uint256 minetime,
         string info
     );
 
@@ -84,7 +81,7 @@ contract Verification {
     event AddHash(
         address indexed exporter,
         bytes32 indexed hash,
-        string indexed rollno,
+        string rollno,
         uint256 minetime,
         string ipfs_hash,
         string name,
@@ -93,7 +90,11 @@ contract Verification {
     );
 
     // Event emitted when a document hash is deleted
-    event HashDeleted(bytes32 indexed hash, address indexed deletedBy);
+    event HashDeleted(
+        bytes32 indexed hash,
+        uint256 minetime,
+        address indexed deletedBy
+    );
 
     //----------------------------------------------------------------------------------------------------------//
 
@@ -105,29 +106,26 @@ contract Verification {
 
         // Create a new Exporter record with a unique ID
         Exporter_Record memory newExporter = Exporter_Record({
-            exporterId: nextExporterId,
             blockNumber: block.number,
             minetime: block.timestamp,
-            info: _info,
-            registerBy: owner
+            info: _info
         });
 
         Exporters[_add] = newExporter;
         count_Exporters++;
-        nextExporterId++; // Increment the exporter ID counter
 
-        emit ExporterAdded(_add, newExporter.exporterId, _info, block.timestamp, owner);
+        emit ExporterAdded(_add, _info, block.timestamp, owner);
     }
 
     function delete_Exporter(address _add) external onlyOwner {
         require(Exporters[_add].blockNumber != 0, "Exporter does not exist");
 
-        uint256 exporterId = Exporters[_add].exporterId; // Capture the exporter's unique ID
+        uint256 minetime = Exporters[_add].minetime; // Capture the exporter's unique ID
         string memory info = Exporters[_add].info;
         delete Exporters[_add];
         count_Exporters--;
 
-        emit ExporterDeleted(_add, exporterId, info); // Emit ExporterDeleted event with the ID
+        emit ExporterDeleted(_add, minetime, info); // Emit ExporterDeleted event with the ID
     }
 
     // Viewing Functions to Retrieve Mappings
@@ -135,9 +133,9 @@ contract Verification {
     function getExporterInfo(address _add)
         external
         view
-        returns (string memory, uint256)
+        returns (string memory)
     {
-        return (Exporters[_add].info, Exporters[_add].exporterId);
+        return (Exporters[_add].info);
     }
 
     function changeOwner(address _newOwner)
@@ -150,41 +148,58 @@ contract Verification {
 
     function addDocHash(
         bytes32 hash,
-        string calldata _ipfs,
-        string calldata _name,
-        string calldata _description,
-        string calldata _rollno,
-        string calldata _email
+        Record calldata details // Using struct to combine parameters
     ) public canAddHash {
         require(docHashes[hash].blockNumber == 0, "Hash already exists");
 
-        Record memory newRecord = Record(
-            block.number,
-            block.timestamp,
-            Exporters[msg.sender].info,
-            _ipfs,
-            _rollno,
-            _name,
-            _description,
-            _email        
-        );
+        docHashes[hash] = Record({
+            blockNumber: block.number,
+            minetime: block.timestamp,
+            info: Exporters[msg.sender].info,
+            ipfs_hash: details.ipfs_hash,
+            rollno: details.rollno,
+            name: details.name,
+            description: details.description,
+            email: details.email
+        });
 
-        docHashes[hash] = newRecord;
         count_hashes++;
+
+        bytes32 compositeKey = keccak256(
+            abi.encodePacked(details.email, details.rollno)
+        );
+        emailRollnoToHash[compositeKey] = hash;
 
         emit AddHash(
             msg.sender,
             hash,
-            _rollno,
+            details.rollno,
             block.timestamp,
-            _ipfs,
-            _name,
-            _description,
-            _email
-        ); 
+            details.ipfs_hash,
+            details.name,
+            details.description,
+            details.email
+        );
     }
 
-    function findDocHash(bytes32 _hash)
+    function findDocByEmailAndRollno(
+        string calldata _email,
+        string calldata _rollno
+    ) external view returns (bytes32 hash, Record memory record) {
+       
+        bytes32 compositeKey = keccak256(abi.encodePacked(_email, _rollno));
+        bytes32 documentHash = emailRollnoToHash[compositeKey];
+        require(
+            documentHash != 0,
+            "Document not found for the given email and roll number"
+        );
+
+        record = docHashes[documentHash];
+
+        return (documentHash, record);
+    }
+
+    function verifyDocHash(bytes32 _hash)
         external
         view
         returns (
@@ -211,17 +226,18 @@ contract Verification {
         );
     }
 
-    function deleteHash(bytes32 _hash)
-        public
-        authorised_Exporter(_hash)
-        canAddHash
-    {
-        require(docHashes[_hash].minetime != 0, "Hash does not exist");
+    function deleteHash(bytes32 _hash) public authorised_Exporter(_hash) canAddHash {
+    require(docHashes[_hash].minetime != 0, "Hash does not exist");
 
-        delete docHashes[_hash];
-        count_hashes--;
+    Record storage record = docHashes[_hash]; // Retrieve the record only once
+    bytes32 compositeKey = keccak256(abi.encodePacked(record.email, record.rollno)); // Use the stored record
 
-        emit HashDeleted(_hash, msg.sender);
-    }
+    emit HashDeleted(_hash, record.minetime, msg.sender); // Use the stored record for emitting event
+
+    delete docHashes[_hash];
+    delete emailRollnoToHash[compositeKey];
+    count_hashes--;
+}
+
     //---------------------------------------------------------------------------------------------------------//
 }

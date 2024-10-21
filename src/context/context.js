@@ -1,16 +1,129 @@
 import { createContext, useContext, useState } from "react";
 import Web3 from "web3";
+import { abi, address } from "../Constants/constants"; // Network removed for simplicity
 
 export const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
+  const [contract, setContract] = useState(null);
+  const [userAddress, setUserAddress] = useState("");
+  const [fileHash, setFileHash] = useState(null);
+  const [message, setMessage] = useState("");
+  const [isFileHashed, setIsFileHashed] = useState(false);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [userBalance, setUserBalance] = useState(null);
+  const [chain, setChain] = useState(null);
   const [issueEvents, setIssueEvents] = useState([]);
+  const [delIssueEvents, setDelIssueEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  const get_ChainID = async () => {
+    if (window.ethereum) {
+      try {
+        const chainId = await window.ethereum.request({
+          method: "eth_chainId",
+        });
+        console.log("Chain ID:", chainId);
+        setChain(chainId);
+        return chainId;
+      } catch (error) {
+        console.error("Error getting chain ID:", error);
+      }
+    } else {
+      console.error("Ethereum object does not exist");
+    }
+  };
+
+  const getSha3 = async (file) => {
+    if (!file) {
+      setMessage("No file selected");
+      return;
+    }
+
+    setMessage("Hashing Your Document 😴...");
+    const reader = new FileReader();
+
+    reader.readAsText(file, "UTF-8");
+
+    reader.onload = async (evt) => {
+      try {
+        const web3 = new Web3(Web3.givenProvider);
+        const hashedfile = await web3.utils.soliditySha3(evt.target.result);
+
+        setFileHash(hashedfile);
+        setIsFileHashed(true);
+        setMessage("Document Hashed 😎");
+        console.log(`Document Hash: ${hashedfile}`);
+      } catch (error) {
+        console.error("Error hashing the file", error);
+        setMessage("Error hashing the file");
+      }
+    };
+
+    reader.onerror = () => {
+      setMessage("Error reading the file");
+      setFileHash(null);
+    };
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    setMessage("");
+    setIsFileHashed(false);
+    setFileHash(null);
+
+    if (selectedFile) {
+      getSha3(selectedFile);
+    }
+  };
+
+  const getEthBalance = async (user) => {
+    try {
+      const web3 = new Web3(Web3.givenProvider); // Initialize Web3 with the given provider
+      const balanceInWei = await web3.eth.getBalance(user); // Get balance in Wei
+      const balanceInEther = web3.utils.fromWei(balanceInWei, "ether"); // Convert balance to Ether
+      const formattedBalance = parseFloat(balanceInEther).toFixed(6); // Format to 6 decimal places
+      setUserBalance(formattedBalance); // Set the formatted balance
+    } catch (err) {
+      console.error("Error fetching balance:", err);
+      setUserBalance("n/a"); // Set to "n/a" in case of an error
+    }
+  };
+
+  const initializeWeb3 = async () => {
+    if (typeof window.ethereum !== "undefined") {
+      const web3 = new Web3(window.ethereum);
+      const contractAddress = address; // Use the validated contract address
+      const contractABI = abi; // Use the correct ABI
+
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const userAddress = accounts[0]; // Get the user's address
+        setUserAddress(userAddress); // Store the user's address
+
+        const contractInstance = new web3.eth.Contract(
+          contractABI,
+          contractAddress
+        );
+        setContract(contractInstance);
+        getEthBalance(userAddress);
+      } catch (error) {
+        console.error("Error initializing contract:", error);
+      }
+    } else {
+      console.error("Please install MetaMask!");
+    }
+  };
 
   const viewDocumentInNewTab = (ipfsHash) => {
     const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
     window.open(ipfsUrl, "_blank");
   };
+
   const downloadDocument = (ipfsHash) => {
     // Construct IPFS URL
     const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
@@ -23,17 +136,35 @@ export const GlobalContextProvider = ({ children }) => {
     document.body.removeChild(link);
   };
 
-
   return (
     <GlobalContext.Provider
-      value={{
+      value={{       
+        contract,
+        userAddress,
+        chain,
+        get_ChainID,
+        userBalance,
+        fileHash,
+        message,
+        setMessage,
+        isFileHashed,
+        file,
+        setFile,
+        loading,
+        setLoading,
         issueEvents,
         setIssueEvents,
+        delIssueEvents, 
+        setDelIssueEvents,        
         showModal,
         setShowModal,
 
+
+      
+        initializeWeb3,         
+        handleFileChange,
         viewDocumentInNewTab,
-        downloadDocument
+        downloadDocument,
       }}
     >
       {children}

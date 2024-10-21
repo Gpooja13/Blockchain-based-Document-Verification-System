@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { GrConnect } from "react-icons/gr";
+import { useGlobalContext } from "../context/context";
 
-export default function SideBar({ userAddress, chain, userBalance }) {
+export default function SideBar() {
   const menuItems = [
     { icon: "", title: "Home", link: "/" },
     { icon: "", title: "Verify", link: "/verify" },
@@ -14,6 +15,7 @@ export default function SideBar({ userAddress, chain, userBalance }) {
     { icon: "", title: "Contact", link: "/contact" },
   ];
   const [selected, setSelected] = useState(menuItems[0]);
+  const { userAddress, chain, userBalance } = useGlobalContext();
   const location = useLocation();
 
   const truncateAddress = (address) => {
