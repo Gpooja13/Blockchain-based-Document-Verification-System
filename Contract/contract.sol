@@ -186,7 +186,6 @@ contract Verification {
         string calldata _email,
         string calldata _rollno
     ) external view returns (bytes32 hash, Record memory record) {
-       
         bytes32 compositeKey = keccak256(abi.encodePacked(_email, _rollno));
         bytes32 documentHash = emailRollnoToHash[compositeKey];
         require(
@@ -202,42 +201,29 @@ contract Verification {
     function verifyDocHash(bytes32 _hash)
         external
         view
-        returns (
-            uint256,
-            uint256,
-            string memory,
-            string memory,
-            string memory,
-            string memory,
-            string memory,
-            string memory
-        )
+        returns (Record memory)
     {
-        Record memory record = docHashes[_hash];
-        return (
-            record.blockNumber,
-            record.minetime,
-            record.info,
-            record.ipfs_hash,
-            record.name,
-            record.description,
-            record.rollno,
-            record.email
-        );
+        return docHashes[_hash];
     }
 
-    function deleteHash(bytes32 _hash) public authorised_Exporter(_hash) canAddHash {
-    require(docHashes[_hash].minetime != 0, "Hash does not exist");
+    function deleteHash(bytes32 _hash)
+        public
+        authorised_Exporter(_hash)
+        canAddHash
+    {
+        require(docHashes[_hash].minetime != 0, "Hash does not exist");
 
-    Record storage record = docHashes[_hash]; // Retrieve the record only once
-    bytes32 compositeKey = keccak256(abi.encodePacked(record.email, record.rollno)); // Use the stored record
+        Record storage record = docHashes[_hash]; // Retrieve the record only once
+        bytes32 compositeKey = keccak256(
+            abi.encodePacked(record.email, record.rollno)
+        ); // Use the stored record
 
-    emit HashDeleted(_hash, record.minetime, msg.sender); // Use the stored record for emitting event
+        emit HashDeleted(_hash, record.minetime, msg.sender); // Use the stored record for emitting event
 
-    delete docHashes[_hash];
-    delete emailRollnoToHash[compositeKey];
-    count_hashes--;
-}
+        delete docHashes[_hash];
+        delete emailRollnoToHash[compositeKey];
+        count_hashes--;
+    }
 
     //---------------------------------------------------------------------------------------------------------//
 }

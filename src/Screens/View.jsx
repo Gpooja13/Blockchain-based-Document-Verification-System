@@ -113,11 +113,10 @@ export default function View() {
           <div className="mt-6 h-[40vh] overflow-y-auto thin-scrollbar">
             {docInfo ? (
               <ul>
-                <li className="border-b pt-2 pb-5 mb-2 space-y-2">
-                  <p>
-                    <strong>Issued By: </strong>
-                    {docInfo.info}
-                  </p>
+                <li className="border-b pb-5 mb-2 space-y-2">
+                  <h3 className="text-center mb-2 text-lg">
+                    <strong>{docInfo.info}</strong>
+                  </h3>
                   <p>
                     <strong>Description: </strong> {docInfo.description}
                   </p>
