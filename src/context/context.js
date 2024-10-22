@@ -17,6 +17,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [issueEvents, setIssueEvents] = useState([]);
   const [delIssueEvents, setDelIssueEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [refreshLog, setRefreshLog] = useState("");
 
   const get_ChainID = async () => {
     if (window.ethereum) {
@@ -158,6 +159,8 @@ export const GlobalContextProvider = ({ children }) => {
         setDelIssueEvents,        
         showModal,
         setShowModal,
+        refreshLog,
+        setRefreshLog,
 
 
       

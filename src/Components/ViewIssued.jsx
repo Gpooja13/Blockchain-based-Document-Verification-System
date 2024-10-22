@@ -25,6 +25,8 @@ export default function ViewIssued({ togglePage, currentPage }) {
     setMessage,
     loading,
     setLoading,
+    refreshLog,
+    setRefreshLog,
   } = useGlobalContext();
   const [authorityInfo, setAuthorityInfo] = useState(null);
   const [hashcount, setHashcount] = useState(0);
@@ -49,6 +51,7 @@ export default function ViewIssued({ togglePage, currentPage }) {
           .on("confirmation", (confirmationNr) => {
             console.log(confirmationNr);
             setShowModal(false);
+            setRefreshLog(Math.random());
           })
           .on("error", (error) => {
             console.error(error.message);
@@ -134,7 +137,8 @@ export default function ViewIssued({ togglePage, currentPage }) {
                     (log) =>
                       !delIssueEvents.some(
                         (delLog) =>
-                          delLog.returnValues.minetime === log.returnValues.minetime
+                          delLog.returnValues.minetime ===
+                          log.returnValues.minetime
                       )
                   ) // Filter out deleted events
                   .map((log, index) => (

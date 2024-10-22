@@ -10,7 +10,6 @@ export default function Admin() {
   const [logs, setLogs] = useState([]);
   const [delLogs, setDelLogs] = useState([]);
   const [delAddress, setDelAddress] = useState("");
-  const [refreshLog, setRefreshLog] = useState("");
   const [exporterCount, setExporterCount] = useState("");
 
   const {
@@ -23,6 +22,8 @@ export default function Admin() {
     setLoading,
     showModal,
     setShowModal,
+    refreshLog,
+    setRefreshLog,
   } = useGlobalContext();
 
   const addExporter = async () => {

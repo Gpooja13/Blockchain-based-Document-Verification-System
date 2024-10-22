@@ -29,6 +29,8 @@ export default function IssueDoc({ togglePage, currentPage }) {
     loading,
     setLoading,
     handleFileChange,
+    refreshLog,
+        setRefreshLog
   } = useGlobalContext();
 
   const uploadFileToPinata = async () => {
@@ -110,6 +112,7 @@ export default function IssueDoc({ togglePage, currentPage }) {
             console.log("Transaction receipt:", receipt);
             setMessage("Transaction successful!");
             setLoading(false);
+            setRefreshLog(Math.random());
             setName("");
             setDesc("");
             setRollno("");
@@ -145,7 +148,7 @@ export default function IssueDoc({ togglePage, currentPage }) {
           toBlock: "latest",
         });
         const delHashEvents = await contract.getPastEvents("HashDeleted", {
-          filter: { exporter: userAddress },
+          filter: { deletedBy: userAddress },
           fromBlock: 0,
           toBlock: "latest",
         });
@@ -166,7 +169,7 @@ export default function IssueDoc({ togglePage, currentPage }) {
     return () => {
       isMounted = false; // Cleanup on unmount
     };
-  }, [contract, userAddress]);
+  }, [refreshLog]);
 
   return (
     <div class="mx-auto mt-10 bg-white h-[67vh] p-10 rounded-3xl drop-shadow-lg ">

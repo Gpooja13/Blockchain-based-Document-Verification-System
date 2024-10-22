@@ -6,28 +6,31 @@ import { useGlobalContext } from "../context/context";
 export default function View() {
   const [rollno, setRollno] = useState("");
   const [email, setEmail] = useState("");
-  const [docInfo, setDocInfo] = useState(null);
-  const { message, setMessage , contract} = useGlobalContext();
+  const [docInfo, setDocInfo] = useState("");
+  const {
+    message,
+    setMessage,
+    contract,
+    viewDocumentInNewTab,
+    downloadDocument,
+  } = useGlobalContext();
 
   const findDocument = async () => {
     try {
+      if (!email && !rollno) {
+        setMessage("Enter all credentials!");
+        return;
+      }
+      const trimmedEmail = email.trim();
+      const trimmedRollno = rollno.trim();
+
       const response = await contract.methods
-        .findDocByEmailAndRollno(email, rollno)
+        .findDocByEmailAndRollno(trimmedEmail, trimmedRollno)
         .call();
 
-      // Extract the document hash and record details
-      const [docHash, docDetails] = response;
+      setDocInfo(response[1]);
 
-      // Set the document info to be displayed
-      setDocInfo({
-        docHash,
-        issuedBy: docDetails.info,
-        name: docDetails.name,
-        rollno: docDetails.rollno,
-        description: docDetails.description,
-        issueDate: new Date(docDetails.minetime * 1000).toLocaleDateString(),
-        ipfsHash: docDetails.ipfs_hash,
-      });
+      console.log(response[1]);
     } catch (error) {
       console.error("Error fetching document:", error);
       setMessage("Document not found.");
@@ -83,7 +86,7 @@ export default function View() {
             <div className="flex flex-wrap items-center justify-center mt-10 gap-5">
               <button
                 type="button"
-                // onClick={addExporter}
+                onClick={findDocument}
                 class="inline-flex items-center gap-1.5 rounded-lg border border-green-500 bg-green-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-green-700 hover:bg-green-700 focus:ring focus:ring-green-200 disabled:cursor-not-allowed disabled:border-green-300 disabled:bg-green-300 w-[30%] justify-center"
               >
                 <svg
@@ -107,40 +110,61 @@ export default function View() {
 
           <hr class="my-5 h-px border-0 bg-gray-300" />
 
-          <div className="mt-5 h-[40vh] overflow-y-auto thin-scrollbar">
-            <ul>
-              <li className="border-b pt-2 pb-5 mb-2">
-                <p>
-                  <strong>Issued By: </strong>
-                  IIT bombay
-                </p>
-                <p>
-                  <strong>Description: </strong> Btech
-                </p>
-                <p>
-                  <strong>Name: </strong>
-                  Pooja Gupta
-                </p>
-                <p>
-                  <strong>Roll no: </strong>
-                  BHT/34/87
-                </p>
-                <div className="flex justify-between">
+          <div className="mt-6 h-[40vh] overflow-y-auto thin-scrollbar">
+            {docInfo ? (
+              <ul>
+                <li className="border-b pt-2 pb-5 mb-2 space-y-2">
                   <p>
-                    <strong>Issue Date: </strong>
-                    23 Jan 2030
+                    <strong>Issued By: </strong>
+                    {docInfo.info}
                   </p>
-                  <div className="flex justify-between items-center">
-                    <button className="text-gray-400 hover:text-blue-600 mr-5">
-                      <FaExternalLinkAlt fontSize={"20px"} />
-                    </button>
-                    <button className="text-gray-400 hover:text-green-600 mr-5">
-                      <FaDownload fontSize={"20px"} />
-                    </button>
+                  <p>
+                    <strong>Description: </strong> {docInfo.description}
+                  </p>
+                  <p>
+                    <strong>Name: </strong>
+                    {docInfo.name}
+                  </p>
+                  <p>
+                    <strong>Roll no: </strong>
+                    {docInfo.rollno}
+                  </p>
+                  <p>
+                    <strong>Email: </strong>
+                    {docInfo.email}
+                  </p>
+
+                  <div className="flex justify-between">
+                    <p>
+                      <strong>Issue Date: </strong>
+                      {new Date(
+                        Number(docInfo.minetime) * 1000
+                      ).toLocaleDateString()}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <button className="text-gray-400 hover:text-blue-600 mr-5">
+                        <FaExternalLinkAlt
+                          fontSize={"20px"}
+                          onClick={() =>
+                            viewDocumentInNewTab(docInfo.ipfs_hash)
+                          }
+                        />
+                      </button>
+                      <button className="text-gray-400 hover:text-green-600 mr-5">
+                        <FaDownload
+                          fontSize={"20px"}
+                          onClick={() => downloadDocument(docInfo.ipfs_hash)}
+                        />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </li>
-            </ul>
+                </li>
+              </ul>
+            ) : (
+              <p className="w-full flex justify-center h-1/2 items-center">
+                No Records
+              </p>
+            )}
           </div>
         </div>
       </div>
