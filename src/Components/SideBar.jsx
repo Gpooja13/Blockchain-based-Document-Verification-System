@@ -3,16 +3,24 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { GrConnect } from "react-icons/gr";
 import { useGlobalContext } from "../context/context";
+import { FaUniversity } from "react-icons/fa";
+import { MdVerified } from "react-icons/md";
+import { MdFindInPage } from "react-icons/md";
+import { TbMessageChatbotFilled } from "react-icons/tb";
+import { MdCloudUpload } from "react-icons/md";
+import { RiInformation2Fill } from "react-icons/ri";
+import { GoHomeFill } from "react-icons/go";
+import { BiSolidFileFind } from "react-icons/bi";
 
 export default function SideBar() {
   const menuItems = [
-    { icon: "", title: "Home", link: "/" },
-    { icon: "", title: "Verify", link: "/verify" },
-    { icon: "", title: "View", link: "/view" },
-    { icon: "", title: "Validate", link: "/upload" },
-    { icon: "", title: "Institute", link: "/admin" },
-    { icon: "", title: "About", link: "/about" },
-    { icon: "", title: "Contact", link: "/contact" },
+    { icon: <GoHomeFill/>, title: "Home", link: "/" },
+    { icon: <MdVerified />, title: "Verify", link: "/verify" },
+    { icon: <BiSolidFileFind/>, title: "View", link: "/view" },
+    { icon: <MdCloudUpload />, title: "Validate", link: "/upload" },
+    { icon: <FaUniversity />, title: "Institute", link: "/admin" },
+    { icon: <RiInformation2Fill />, title: "About", link: "/about" },
+    { icon: <TbMessageChatbotFilled />, title: "Contact", link: "/contact" },
   ];
   const [selected, setSelected] = useState(menuItems[0]);
   const { userAddress, chain, userBalance } = useGlobalContext();
@@ -33,7 +41,7 @@ export default function SideBar() {
 
   return (
     <div className="z-10 drop-shadow-sm">
-      <aside className="w-72 flex-none bg-blue-200 p-2">
+      <aside className="w-72 flex-none bg-blue-100 p-2 h-full">
         <div className="flex flex-wrap items-center justify-center gap-3 h-[15vh] border-b-2 border-white">
           <div className="h-12 w-12 border-white border-2  rounded-full flex items-center justify-center">
             <GrConnect className="h-[70%] w-[70%] object-center" />
@@ -61,6 +69,7 @@ export default function SideBar() {
                         : ""
                     }`}
                   >
+                    <span className="ml-4 text-2xl">{item.icon}</span>
                     <p className="m-5">{item.title}</p>
                   </li>
                 </Link>
