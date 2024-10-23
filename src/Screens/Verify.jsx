@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Heading from "../Components/Heading";
 import VerificationGif from "../Components/VerificationGif";
+import { FaExternalLinkAlt, FaDownload } from "react-icons/fa";
 import { useGlobalContext } from "../context/context";
 
 export default function Verify() {
   const [verificationInfo, setVerificationInfo] = useState(null);
-  const [isVerified, setIsVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState("unKnown");
   const {
     contract,
     userAddress,
@@ -14,7 +15,10 @@ export default function Verify() {
     setMessage,
     loading,
     setLoading,
+    file,
     handleFileChange,
+    viewDocumentInNewTab,
+    downloadDocument,
   } = useGlobalContext();
 
   const verifyHash = async () => {
@@ -45,7 +49,6 @@ export default function Verify() {
 
     setLoading(false);
   };
-
 
   return (
     <div className="bg-gray-200">
@@ -85,10 +88,18 @@ export default function Verify() {
                     </svg>
                   </div>
                   <div class="text-gray-600">
-                    <p className="font-medium text-primary-500 hover:text-primary-700">
-                      Click to upload
-                      <span className="font-normal">or drag and drop</span>
-                    </p>
+                    {file ? (
+                      <p className="font-medium text-primary-500 hover:text-primary-700">
+                        {file.name}
+                      </p>
+                    ) : (
+                      <p className="font-medium text-primary-500 hover:text-primary-700">
+                        Click to upload
+                        <span className="font-normal ml-1">
+                          or drag and drop
+                        </span>
+                      </p>
+                    )}
                   </div>
                   <p class="text-sm text-gray-500">
                     {/* SVG, PNG, JPG or GIF (max. 800x400px) */}
@@ -139,64 +150,86 @@ export default function Verify() {
           <hr class="my-5 h-px border-0 bg-gray-300" />
 
           <div className="mt-5 h-[40vh] space-y-2">
-            <h4 className="font-bold text-lg text-center mb-5">
-              {/* {verificationInfo.} */}
-            </h4>
-            <p>
-              <strong className="text-gray-700">Transaction Id: </strong>
-              123ABC
-            </p>
-            <p>
-              <strong className="text-gray-700">Name: </strong> Pooja Gupta
-            </p>
-            <p>
-              <strong className="text-gray-700">Rollno: </strong> BFT/17/163
-            </p>
-            <p>
-              <strong className="text-gray-700">Email: </strong>
-              gpooja750@yahoo.com
-            </p>
-            <p>
-              <strong className="text-gray-700">Description: </strong> Bachelor
-              of Fashion Design
-            </p>
-            <p>
-              <strong className="text-gray-700">Date Issued: </strong> 2014
-            </p>
-          </div>
-          <div className="flex justify-evenly items-center ">
-            <button
-              type="button"
-              class="inline-flex items-center gap-1.5 rounded-lg border border-green-500 bg-green-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-green-700 hover:bg-green-700 focus:ring focus:ring-green-200 disabled:cursor-not-allowed disabled:border-green-300 disabled:bg-green-300"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                class="h-4 w-4"
-              >
-                <path d="M9.25 13.25a.75.75 0 001.5 0V4.636l2.955 3.129a.75.75 0 001.09-1.03l-4.25-4.5a.75.75 0 00-1.09 0l-4.25 4.5a.75.75 0 101.09 1.03L9.25 4.636v8.614z" />
-                <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
-              </svg>
-              View Doc
-            </button>
+            {verificationInfo && isVerified ? (
+              <ul>
+                <li className="border-b pb-5 mb-2 space-y-2">
+                  <h3 className="text-center mb-3 text-lg">
+                    <strong>title{verificationInfo?.info}</strong>
+                  </h3>
+                  <p>
+                    <strong>Description: </strong>{" "}
+                    {verificationInfo?.description}
+                  </p>
+                  <p>
+                    <strong>Name: </strong>
+                    {verificationInfo?.name}
+                  </p>
+                  <p>
+                    <strong>Roll no: </strong>
+                    {verificationInfo?.rollno}
+                  </p>
+                  <p>
+                    <strong>Email: </strong>
+                    {verificationInfo?.email}
+                  </p>
+                  <p>
+                    <strong>Issue Date: </strong>
+                    {new Date(
+                      Number(verificationInfo?.minetime) * 1000
+                    ).toLocaleDateString()}
+                  </p>
 
-            <button
-              type="button"
-              class="inline-flex items-center gap-1.5 rounded-lg border border-blue-500 bg-blue-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-primary-700 hover:bg-primary-700 focus:ring focus:ring-primary-200 disabled:cursor-not-allowed disabled:border-primary-300 disabled:bg-primary-300"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                class="h-4 w-4"
-              >
-                <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
-                <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
-              </svg>
-              Download
-            </button>
+                  <div className="flex justify-between">
+                    <p className="flex">
+                      <strong>Status: </strong>
+                      <img
+                        src="/verified.png"
+                        alt="verified"
+                        className="h-28 ml-2"
+                      />
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <button className="text-gray-400 hover:text-blue-600 mr-5">
+                        <FaExternalLinkAlt
+                          fontSize={"20px"}
+                          onClick={() =>
+                            viewDocumentInNewTab(verificationInfo?.ipfs_hash)
+                          }
+                        />
+                      </button>
+                      <button className="text-gray-400 hover:text-green-600 mr-5">
+                        <FaDownload
+                          fontSize={"20px"}
+                          onClick={() =>
+                            downloadDocument(verificationInfo?.ipfs_hash)
+                          }
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            ) : (
+              <div className="flex items-center justify-center flex-col">
+                <p className="w-full flex justify-center h-1/2 items-center mt-10">
+                  No Records
+                </p>
+                {isVerified === "unKnown" ? (
+                  ""
+                ) : (
+                  <p className="flex">
+                    <strong>Status: </strong>
+                    <img
+                      src="/notCer.png"
+                      alt="unverified"
+                      className="h-28 ml-2"
+                    />
+                  </p>
+                )}
+              </div>
+            )}
           </div>
+          
         </div>
       </div>
     </div>

@@ -114,7 +114,7 @@ export default function View() {
             {docInfo ? (
               <ul>
                 <li className="border-b pb-5 mb-2 space-y-2">
-                  <h3 className="text-center mb-2 text-lg">
+                  <h3 className="text-center mb-3 text-lg">
                     <strong>{docInfo.info}</strong>
                   </h3>
                   <p>

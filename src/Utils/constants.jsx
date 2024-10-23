@@ -1,4 +1,4 @@
-export const address = "0x18E27BB51eab7640B963C7Ceaf46E81C20448464";
+export const address = "0x7BCdC3d2E985d5f1fC16782B43f3915CfDCEa2B4";
 
 export const network = "Example : https://polygon-rpc.com/";
 export const explore = "Example : https://polygonscan.com/";
@@ -431,44 +431,51 @@ export const abi = [
     name: "verifyDocHash",
     outputs: [
       {
-        internalType: "uint256",
+        components: [
+          {
+            internalType: "uint256",
+            name: "blockNumber",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "minetime",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "info",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "ipfs_hash",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "rollno",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "description",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "email",
+            type: "string",
+          },
+        ],
+        internalType: "struct Verification.Record",
         name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
+        type: "tuple",
       },
     ],
     stateMutability: "view",

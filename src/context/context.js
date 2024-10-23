@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import Web3 from "web3";
-import { abi, address } from "../Constants/constants"; // Network removed for simplicity
+import { abi, address } from "../Utils/constants"; // Network removed for simplicity
 
 export const GlobalContext = createContext();
 

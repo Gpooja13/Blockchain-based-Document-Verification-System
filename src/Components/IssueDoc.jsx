@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { JWT } from "../Constants/constants";
+import { JWT } from "../Utils/constants";
 import {
   MdOutlineArrowForwardIos,
   MdOutlineArrowBackIosNew,
@@ -66,7 +66,6 @@ export default function IssueDoc({ togglePage, currentPage }) {
       const fileCid = data.IpfsHash; // Pinata returns 'IpfsHash'
       setCid(fileCid); // Save CID from Pinata response
       setMessage(`File uploaded to Pinata!`);
-      setLoading(false);
       console.log(`File CID from Pinata: ${fileCid}`);
       return fileCid;
     } catch (error) {

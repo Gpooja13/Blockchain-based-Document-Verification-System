@@ -4,20 +4,21 @@ import { useLocation } from "react-router-dom";
 import { GrConnect } from "react-icons/gr";
 import { useGlobalContext } from "../context/context";
 import { FaUniversity } from "react-icons/fa";
-import { MdVerified } from "react-icons/md";
-import { MdFindInPage } from "react-icons/md";
+import { MdFileUpload, MdVerified } from "react-icons/md";
 import { TbMessageChatbotFilled } from "react-icons/tb";
-import { MdCloudUpload } from "react-icons/md";
 import { RiInformation2Fill } from "react-icons/ri";
 import { GoHomeFill } from "react-icons/go";
 import { BiSolidFileFind } from "react-icons/bi";
+import { MdFindInPage } from "react-icons/md";
+import { FaFileUpload } from "react-icons/fa";
+import { FaFileSignature } from "react-icons/fa6";
 
 export default function SideBar() {
   const menuItems = [
-    { icon: <GoHomeFill/>, title: "Home", link: "/" },
+    { icon: <GoHomeFill />, title: "Home", link: "/" },
     { icon: <MdVerified />, title: "Verify", link: "/verify" },
-    { icon: <BiSolidFileFind/>, title: "View", link: "/view" },
-    { icon: <MdCloudUpload />, title: "Validate", link: "/upload" },
+    { icon: <BiSolidFileFind fontSize={"1.7rem"} />, title: "View", link: "/view" },
+    { icon: <FaFileSignature />, title: "Validate", link: "/upload" },
     { icon: <FaUniversity />, title: "Institute", link: "/admin" },
     { icon: <RiInformation2Fill />, title: "About", link: "/about" },
     { icon: <TbMessageChatbotFilled />, title: "Contact", link: "/contact" },
