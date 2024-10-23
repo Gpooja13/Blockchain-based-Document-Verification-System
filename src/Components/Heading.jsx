@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Heading({title}) {
   return (
-    <div className="bg-gray-200 h-[10vh] w-[78.9vw] drop-shadow-md">
+    <div className="bg-gray-100 h-[10vh] w-[78.9vw] drop-shadow-md">
       <div className="ml-5">
         <nav aria-label="breadcrumb">
           <ol class="inline-flex items-center space-x-4 pt-2 text-sm font-medium">

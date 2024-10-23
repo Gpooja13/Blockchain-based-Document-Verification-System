@@ -17,7 +17,11 @@ export default function SideBar() {
   const menuItems = [
     { icon: <GoHomeFill />, title: "Home", link: "/" },
     { icon: <MdVerified />, title: "Verify", link: "/verify" },
-    { icon: <BiSolidFileFind fontSize={"1.7rem"} />, title: "View", link: "/view" },
+    {
+      icon: <BiSolidFileFind fontSize={"1.7rem"} />,
+      title: "View",
+      link: "/view",
+    },
     { icon: <FaFileSignature />, title: "Validate", link: "/upload" },
     { icon: <FaUniversity />, title: "Institute", link: "/admin" },
     { icon: <RiInformation2Fill />, title: "About", link: "/about" },
@@ -29,7 +33,7 @@ export default function SideBar() {
 
   const truncateAddress = (address) => {
     if (!address) return "";
-    return `${address.substr(0, 7)}...${address.substr(address.length - 8)}`;
+    return `${address.substr(0, 5)}...${address.substr(address.length - 5)}`;
   };
 
   useEffect(() => {
@@ -42,18 +46,18 @@ export default function SideBar() {
 
   return (
     <div className="z-10 drop-shadow-sm">
-      <aside className="w-72 flex-none bg-blue-100 p-2 h-full">
-        <div className="flex flex-wrap items-center justify-center gap-3 h-[15vh] border-b-2 border-white">
-          <div className="h-12 w-12 border-white border-2  rounded-full flex items-center justify-center">
-            <GrConnect className="h-[70%] w-[70%] object-center" />
-          </div>
-          <div>
-            <div className="text-sm font-medium text-secondary-500">
-              Address: {truncateAddress(userAddress)}
-            </div>
-            <div className="text-xs text-secondary-400">Network: {chain}</div>
-            <div className="text-xs text-secondary-400">
-              Balance: {userBalance}
+      <aside className="w-72 flex-none bg-indigo-100 p-2 h-full">
+        <div className="flex flex-wrap items-center justify-center w-full h-[15vh] border-b-2 border-white ">
+          <div className=" border-white border-2 p-3 m-2 rounded-lg flex items-center justify-around w-full bg-indigo-50 ">
+            <GrConnect className="h-[20%] w-[20%] object-center" />
+            <div className=" pl-3 flex flex-col">
+              <div className="text-sm font-medium text-secondary-500">
+                Address: {truncateAddress(userAddress)}
+              </div>
+              <div className="text-xs text-secondary-400">Network: {chain}</div>
+              <div className="text-xs text-secondary-400">
+                Balance: {userBalance}
+              </div>
             </div>
           </div>
         </div>
@@ -64,9 +68,9 @@ export default function SideBar() {
                 <Link key={index} to={item.link}>
                   <li
                     onClick={() => setSelected(menuItems[index])}
-                    className={`h-[10vh] flex items-center justify-start text-lg hover:bg-slate-300 ${
+                    className={`h-[10vh] flex items-center justify-start text-lg hover:bg-indigo-200 ${
                       selected.title === item.title
-                        ? "border-r-green-500 border-4"
+                        ? "border-r-green-500 border-4 border-y-indigo-200 border-l-indigo-200"
                         : ""
                     }`}
                   >

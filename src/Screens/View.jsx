@@ -5,7 +5,6 @@ import { useGlobalContext } from "../context/context";
 
 export default function View() {
   const [rollno, setRollno] = useState("");
-  const [email, setEmail] = useState("");
   const [docInfo, setDocInfo] = useState("");
   const {
     message,
@@ -13,6 +12,7 @@ export default function View() {
     contract,
     viewDocumentInNewTab,
     downloadDocument,
+    email
   } = useGlobalContext();
 
   const findDocument = async () => {
@@ -74,7 +74,7 @@ export default function View() {
                 type="email"
                 id="address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                // onChange={(e) => setEmail(e.target.value)}
                 className="block w-full h-[8vh] px-4 rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
                 placeholder="abc@gmail.com"
               />

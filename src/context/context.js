@@ -5,7 +5,9 @@ import { abi, address } from "../Utils/constants"; // Network removed for simpli
 export const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
+  const [connected, setConnected] = useState(false);
   const [contract, setContract] = useState(null);
+  const [email, setEmail] = useState("");
   const [userAddress, setUserAddress] = useState("");
   const [fileHash, setFileHash] = useState(null);
   const [message, setMessage] = useState("");
@@ -18,6 +20,30 @@ export const GlobalContextProvider = ({ children }) => {
   const [delIssueEvents, setDelIssueEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [refreshLog, setRefreshLog] = useState("");
+
+  const connect = async () => {
+    if (window.ethereum) {
+      try {
+        const selectedAccount = await window.ethereum
+          .request({ method: "eth_requestAccounts" })
+          .then((accounts) => {
+            return accounts[0];
+          })
+          .catch(() => {
+            throw new Error("No account selected 👍");
+          });
+
+        window.userAddress = selectedAccount;
+        console.log("Connected account:", selectedAccount);
+        window.localStorage.setItem("userAddress", selectedAccount); // Save the user address
+        setConnected(true);
+      } catch (error) {
+        console.error("Error connecting to wallet:", error);
+      }
+    } else {
+      alert("No Ethereum wallet detected. Please install MetaMask.");
+    }
+  };
 
   const get_ChainID = async () => {
     if (window.ethereum) {
@@ -139,7 +165,11 @@ export const GlobalContextProvider = ({ children }) => {
 
   return (
     <GlobalContext.Provider
-      value={{       
+      value={{
+        connected,
+        setConnected,
+        email,
+        setEmail,
         contract,
         userAddress,
         chain,
@@ -155,16 +185,15 @@ export const GlobalContextProvider = ({ children }) => {
         setLoading,
         issueEvents,
         setIssueEvents,
-        delIssueEvents, 
-        setDelIssueEvents,        
+        delIssueEvents,
+        setDelIssueEvents,
         showModal,
         setShowModal,
         refreshLog,
         setRefreshLog,
 
-
-      
-        initializeWeb3,         
+        connect,
+        initializeWeb3,
         handleFileChange,
         viewDocumentInNewTab,
         downloadDocument,

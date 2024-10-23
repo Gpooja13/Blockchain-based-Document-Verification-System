@@ -136,7 +136,7 @@ export default function Admin() {
   }, [refreshLog]);
 
   return (
-    <div className="bg-gray-200">
+    <div className="bg-gray-100">
       <Heading title={"Admin"} />
       <div className="flex justify-center items-center px-10">
         <Modal
