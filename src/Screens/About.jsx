@@ -4,7 +4,7 @@ import Heading from "../Components/Heading";
 export default function About() {
   return (
     <div>
-      <Heading title={"About"} />
+      <Heading title={"About"} showBreadcrum={true}/>
       <section class="text-gray-600 w-[72vw] mx-auto body-font p-5 flex items-center overflow-hidden h-[90vh]">
         <div class="container p-10 mx-auto bg-white rounded-3xl drop-shadow-lg flex flex-wrap items-center justify-between">
           <div className="flex flex-col">

@@ -12,6 +12,8 @@ import { BiSolidFileFind } from "react-icons/bi";
 import { MdFindInPage } from "react-icons/md";
 import { FaFileUpload } from "react-icons/fa";
 import { FaFileSignature } from "react-icons/fa6";
+import { FaCoins } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
 
 export default function SideBar() {
   const menuItems = [
@@ -47,7 +49,7 @@ export default function SideBar() {
   return (
     <div className="z-10 drop-shadow-sm bg-indigo-100 h-[100vh]">
       <aside className="w-72 flex-none p-2 h-full ">
-        <div className="flex flex-wrap items-center justify-center w-full h-[24vh]">
+        <div className="flex flex-wrap items-end justify-center w-full h-[24vh]">
           <div className="flex items-center justify-center">
             <img src="/logo.webp" alt="logo" width={"50px"} />
             <p className="text-2xl">
@@ -55,20 +57,19 @@ export default function SideBar() {
             </p>
           </div>
 
-          <div className="flex p-3 ">
-            {/* <GrConnect className="h-[15%] w-[15%] object-center p-1" /> */}
-            <div className=" pl-3 flex flex-col hover:font-bold cursor-pointer">
-              <div className="text-sm font-medium text-secondary-500">
-                Address: {truncateAddress(userAddress)}
+          <div className="flex p-1 w-full mx-3 ">
+            <div className=" flex flex-col hover:font-bold cursor-pointer ">
+              <div className="text-sm font-medium text-secondary-500 flex gap-2">
+                <span><FaCoins/></span>Address: {truncateAddress(userAddress)}
               </div>
               {/* <div className="text-xs text-secondary-400">Network: {chain}</div> */}
-              <div className="text-sm font-medium text-secondary-400">
-                Balance: {userBalance}
+              <div className="text-sm font-medium text-secondary-400 flex gap-2">
+              <span><FaLocationDot/></span>Balance: {userBalance}
               </div>
             </div>
           </div>
         </div>
-        <hr class="my-2 h-px border-2 border-gray-700" />
+        <hr class="my-2 h-px border-0 bg-indigo-500" />
         <div>
           <ul>
             {menuItems.map((item, index) => {
@@ -85,7 +86,7 @@ export default function SideBar() {
                     <span className="ml-4 text-2xl text-indigo-500 ">
                       {item.icon}
                     </span>
-                    <p className="m-5 hover:font-semibold">{item.title}</p>
+                    <p className="m-5">{item.title}</p>
                   </li>
                 </Link>
               );

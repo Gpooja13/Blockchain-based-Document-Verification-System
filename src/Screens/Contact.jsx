@@ -4,7 +4,7 @@ import Heading from "../Components/Heading";
 export default function Contact() {
   return (
     <div >
-      <Heading title={"Contact"} />
+      <Heading title={"Contact"} showBreadcrum={true}/>
       <section class="body-font relative h-[90vh] flex justify-center items-center">
         <div class="container py-10 px-14 mx-auto bg-white w-2/3 drop-shadow-lg rounded-3xl">
           <div class="flex flex-col text-center w-full mb-3 -mt-2">

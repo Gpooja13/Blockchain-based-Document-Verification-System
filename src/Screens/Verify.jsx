@@ -52,7 +52,7 @@ export default function Verify() {
 
   return (
     <div>
-      <Heading title={"Verify"} />
+      <Heading title={"Verify"} showBreadcrum={true}/>
       {/* <VerificationGif/> */}
       <div className="flex justify-center items-center px-10 h-[90vh]">
         <div className=" w-[50%] h-[68vh] bg-white p-10 mr-4 rounded-3xl drop-shadow-lg">

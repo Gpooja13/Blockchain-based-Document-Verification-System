@@ -39,7 +39,7 @@ export default function View() {
 
   return (
     <div >
-      <Heading title={"View"} />
+      <Heading title={"View"} showBreadcrum={true}/>
       <div className="flex justify-center items-center px-10 h-[90vh]">
         <div className=" w-[50%] h-[68vh] bg-white p-10 mr-4 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">

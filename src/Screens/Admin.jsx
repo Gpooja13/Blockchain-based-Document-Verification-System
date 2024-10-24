@@ -137,7 +137,7 @@ export default function Admin() {
 
   return (
     <div >
-      <Heading title={"Admin"} />
+      <Heading title={"Admin"} showBreadcrum={true} />
       <div className="flex justify-center items-center px-10 h-[90vh]">
         <Modal
           deleteFunction={deleteExporter}

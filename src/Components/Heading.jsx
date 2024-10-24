@@ -4,7 +4,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../context/context";
 
-export default function Heading({ title }) {
+export default function Heading({ title, showBreadcrum }) {
   const navigate = useNavigate();
   const { connected, setConnected, connect } = useGlobalContext();
 
@@ -35,7 +35,7 @@ export default function Heading({ title }) {
     <div className="bg-gray-100 h-[10vh] w-[78.9vw] drop-shadow-md flex justify-between items-center">
       <div className="ml-5">
         <nav aria-label="breadcrumb">
-          <ol class="inline-flex items-center space-x-4 pt-2 text-sm font-medium">
+          {showBreadcrum && <ol class="inline-flex items-center space-x-4 pt-2 text-sm font-medium">
             <li class="inline-flex items-center">
               <Link
                 to={"/"}
@@ -50,13 +50,13 @@ export default function Heading({ title }) {
                 {title}
               </Link>
             </li>
-          </ol>
+          </ol>}
           <div>
             <h2 className="mx-3 text-xl font-bold">{title}</h2>
           </div>
         </nav>
       </div>
-      <div className="mr-5">
+      <div className="mr-6">
         <button
           type="button"
           onClick={connect}

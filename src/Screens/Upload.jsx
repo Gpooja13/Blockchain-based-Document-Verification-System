@@ -45,7 +45,7 @@ export default function Upload() {
 
   return (
     <div>
-      <Heading title={"Upload"} />
+      <Heading title={"Upload"} showBreadcrum={true}/>
       <div className="flex justify-center items-center h-[90vh]" ref={wrapper}>
         <div className="relative w-full h-full"> {/* Ensure the container is full height */}
           <Transition
