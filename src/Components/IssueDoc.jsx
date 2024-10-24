@@ -171,7 +171,7 @@ export default function IssueDoc({ togglePage, currentPage }) {
   }, [refreshLog]);
 
   return (
-    <div class="mx-auto mt-10 bg-white h-[67vh] p-10 rounded-3xl drop-shadow-lg ">
+    <div class="mx-auto bg-white h-[68vh] p-10 rounded-3xl drop-shadow-lg ">
       <div className="flex justify-center">
         <h2 className="font-semibold text-2xl">Upload Document</h2>
         <button
@@ -199,7 +199,7 @@ export default function IssueDoc({ togglePage, currentPage }) {
       </div>
       <hr class="mt-5 h-px border-0 bg-gray-300" />
       <form action="" class="space-y-5 flex items-baseline justify-center ">
-        <div class="grid grid-cols-6 gap-5 w-[48vw] ">
+        <div class="grid grid-cols-6 gap-5 w-[47vw] ">
           <div class="col-span-2">
             <label for="example7" class="mb-1 block font-medium text-gray-700">
               Name

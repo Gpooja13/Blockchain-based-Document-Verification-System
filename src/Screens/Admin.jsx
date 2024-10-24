@@ -136,15 +136,15 @@ export default function Admin() {
   }, [refreshLog]);
 
   return (
-    <div className="bg-gray-100">
+    <div >
       <Heading title={"Admin"} />
-      <div className="flex justify-center items-center px-10">
+      <div className="flex justify-center items-center px-10 h-[90vh]">
         <Modal
           deleteFunction={deleteExporter}
           delRecord={delAddress}
           title={"Authority"}
         />
-        <div className=" w-[50%] h-[65vh] bg-white p-10 mt-10 mr-4 rounded-3xl drop-shadow-lg">
+        <div className=" w-[50%] h-[68vh] bg-white p-10 mr-4 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
             <h2 className="font-semibold text-2xl">Register Authority</h2>
           </div>
@@ -207,7 +207,7 @@ export default function Admin() {
             </div>
           </form>
         </div>
-        <div className=" w-[50%] h-[65vh] bg-white py-10 ml-4 pl-10 pr-8 mt-10 rounded-3xl drop-shadow-lg">
+        <div className=" w-[50%] h-[68vh] bg-white py-10 ml-4 pl-10 pr-8 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
             <h2 className="font-semibold text-2xl">{`View Logs (${
               exporterCount === "" ? 0 : exporterCount

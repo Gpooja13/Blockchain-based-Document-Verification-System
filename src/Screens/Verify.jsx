@@ -51,11 +51,11 @@ export default function Verify() {
   };
 
   return (
-    <div className="bg-gray-200">
+    <div>
       <Heading title={"Verify"} />
       {/* <VerificationGif/> */}
-      <div className="flex justify-center items-center px-10 h-[80vh]">
-        <div className=" w-[50%] h-[70vh] bg-white p-10 mr-4 rounded-3xl drop-shadow-lg">
+      <div className="flex justify-center items-center px-10 h-[90vh]">
+        <div className=" w-[50%] h-[68vh] bg-white p-10 mr-4 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
             <h2 className="font-semibold text-2xl">Verify Document</h2>
           </div>
@@ -115,13 +115,10 @@ export default function Verify() {
             </div>
 
             <div className="text-center h-5 mt-4 flex justify-center items-center ">
-              {message && <p className="text-sm">{message}</p>}
+              {!message && <p className="text-sm">{message}</p>}
             </div>
 
-            <div
-              className="flex flex-wrap items-center justify-center gap-5"
-              style={{ marginTop: "30px" }}
-            >
+            <div className="flex flex-wrap items-center justify-center gap-5">
               <button
                 type="button"
                 onClick={verifyHash}
@@ -142,7 +139,7 @@ export default function Verify() {
           </form>
         </div>
 
-        <div className=" w-[50%] h-[70vh] bg-white py-10 ml-4 pl-10 pr-8 rounded-3xl drop-shadow-lg">
+        <div className=" w-[50%] h-[68vh] bg-white py-10 ml-4 pl-10 pr-8 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
             <h2 className="font-semibold text-2xl">View Result</h2>
           </div>
@@ -229,7 +226,6 @@ export default function Verify() {
               </div>
             )}
           </div>
-          
         </div>
       </div>
     </div>

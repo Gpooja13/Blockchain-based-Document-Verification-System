@@ -44,21 +44,21 @@ export default function Upload() {
   }, []);
 
   return (
-    <div className=" bg-gray-200 ">
+    <div>
       <Heading title={"Upload"} />
-      <div className="flex justify-center items-center" ref={wrapper}>
-        <div className="w-full">
+      <div className="flex justify-center items-center h-[90vh]" ref={wrapper}>
+        <div className="relative w-full h-full"> {/* Ensure the container is full height */}
           <Transition
             show={currentPage === 0}
             enter="transform transition ease-in-out duration-500"
-            enterFrom={`-translate-x-full opacity-0`}
+            enterFrom="-translate-x-full opacity-0"
             enterTo="translate-x-0 opacity-100"
             leave="transform transition ease-in-out duration-500"
             leaveFrom="translate-x-0 opacity-100"
             leaveTo="-translate-x-full opacity-0"
           >
             <div
-              className="flex items-center justify-center "
+              className="absolute inset-0 flex items-center justify-center"
               style={{ width: `${wrapperWidth}px` }}
             >
               <IssueDoc
@@ -67,29 +67,26 @@ export default function Upload() {
               />
             </div>
           </Transition>
-          {/* Page 1 */}
+
           <Transition
             show={currentPage === 1}
             enter="transform transition ease-in-out duration-500"
-            enterFrom={`translate-x-full opacity-0`}
+            enterFrom="translate-x-full opacity-0"
             enterTo="translate-x-0 opacity-100"
             leave="transform transition ease-in-out duration-500"
             leaveFrom="translate-x-0 opacity-100"
             leaveTo="translate-x-full opacity-0"
           >
             <div
-              className="flex items-center justify-center h-full"
+              className="absolute inset-0 flex items-center justify-center"
               style={{ width: `${wrapperWidth}px` }}
             >
               <ViewIssued
                 togglePage={togglePage}
                 currentPage={currentPage}
-                
               />
             </div>
           </Transition>
-
-          {/* Page 2 */}
         </div>
       </div>
     </div>

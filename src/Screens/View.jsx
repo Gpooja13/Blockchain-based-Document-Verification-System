@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Heading from "../Components/Heading";
 import { FaExternalLinkAlt, FaDownload } from "react-icons/fa";
 import { useGlobalContext } from "../context/context";
@@ -38,10 +38,10 @@ export default function View() {
   };
 
   return (
-    <div className="bg-gray-200">
+    <div >
       <Heading title={"View"} />
-      <div className="flex justify-center items-center px-10 h-[77vh]">
-        <div className=" w-[50%] h-[65vh] bg-white p-10 mr-4 rounded-3xl drop-shadow-lg">
+      <div className="flex justify-center items-center px-10 h-[90vh]">
+        <div className=" w-[50%] h-[68vh] bg-white p-10 mr-4 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
             <h2 className="font-semibold text-2xl">Find Document</h2>
           </div>
@@ -103,7 +103,7 @@ export default function View() {
             </div>
           </form>
         </div>
-        <div className=" w-[50%] h-[65vh] bg-white py-10 ml-4 pl-10 pr-8 rounded-3xl drop-shadow-lg">
+        <div className=" w-[50%] h-[67vh] bg-white py-10 ml-4 pl-10 pr-8 rounded-3xl drop-shadow-lg">
           <div className="flex justify-center">
             <h2 className="font-semibold text-2xl">View Result</h2>
           </div>

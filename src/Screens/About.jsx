@@ -3,10 +3,10 @@ import Heading from "../Components/Heading";
 
 export default function About() {
   return (
-    <div className="bg-gray-200 ">
+    <div>
       <Heading title={"About"} />
-      <section class="text-gray-600 bg-white w-[72vw] mt-10 rounded-3xl drop-shadow-lg mx-auto body-font p-5 h-[68vh] flex items-center overflow-hidden">
-        <div class="container px-5 py-24 mx-auto flex flex-wrap items-center justify-between">
+      <section class="text-gray-600 w-[72vw] mx-auto body-font p-5 flex items-center overflow-hidden h-[90vh]">
+        <div class="container p-10 mx-auto bg-white rounded-3xl drop-shadow-lg flex flex-wrap items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-center">
               <img src="/logo.webp" alt="" width={"50px"} />

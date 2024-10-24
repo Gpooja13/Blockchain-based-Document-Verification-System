@@ -93,9 +93,9 @@ export default function ViewIssued({ togglePage, currentPage }) {
   return (
     <>
       <Modal deleteFunction={deleteHash} delRecord={delHash} title={"Record"} />
-      <div class="mx-auto mt-10 bg-white h-[67vh] p-10 rounded-3xl drop-shadow-lg  ">
+      <div class="mx-auto bg-white h-[68vh] p-10 rounded-3xl drop-shadow-lg  ">
         <div className="flex justify-center">
-          <h3 className=" font-semibold absolute left-0 top-12 ml-10 flex items-center ">
+          <h3 className=" font-semibold absolute left-0 top-14 ml-10 flex items-center ">
             <MdOutlineLocationOn className="mr-1" />
             {authorityInfo}
           </h3>

@@ -45,22 +45,30 @@ export default function SideBar() {
   }, [location.pathname]);
 
   return (
-    <div className="z-10 drop-shadow-sm">
-      <aside className="w-72 flex-none bg-indigo-100 p-2 h-full">
-        <div className="flex flex-wrap items-center justify-center w-full h-[15vh] border-b-2 border-white ">
-          <div className=" border-white border-2 p-3 m-2 rounded-lg flex items-center justify-around w-full bg-indigo-50 ">
-            <GrConnect className="h-[20%] w-[20%] object-center" />
-            <div className=" pl-3 flex flex-col">
+    <div className="z-10 drop-shadow-sm bg-indigo-100 h-[100vh]">
+      <aside className="w-72 flex-none p-2 h-full ">
+        <div className="flex flex-wrap items-center justify-center w-full h-[24vh]">
+          <div className="flex items-center justify-center">
+            <img src="/logo.webp" alt="logo" width={"50px"} />
+            <p className="text-2xl">
+              <strong>DocCheck</strong>
+            </p>
+          </div>
+
+          <div className="flex p-3 ">
+            {/* <GrConnect className="h-[15%] w-[15%] object-center p-1" /> */}
+            <div className=" pl-3 flex flex-col hover:font-bold cursor-pointer">
               <div className="text-sm font-medium text-secondary-500">
                 Address: {truncateAddress(userAddress)}
               </div>
-              <div className="text-xs text-secondary-400">Network: {chain}</div>
-              <div className="text-xs text-secondary-400">
+              {/* <div className="text-xs text-secondary-400">Network: {chain}</div> */}
+              <div className="text-sm font-medium text-secondary-400">
                 Balance: {userBalance}
               </div>
             </div>
           </div>
         </div>
+        <hr class="my-2 h-px border-2 border-gray-700" />
         <div>
           <ul>
             {menuItems.map((item, index) => {
@@ -68,14 +76,16 @@ export default function SideBar() {
                 <Link key={index} to={item.link}>
                   <li
                     onClick={() => setSelected(menuItems[index])}
-                    className={`h-[10vh] flex items-center justify-start text-lg hover:bg-indigo-200 ${
+                    className={`h-[10vh] flex items-center justify-start text-lg drop-shadow-lg hover:bg-indigo-200 ${
                       selected.title === item.title
-                        ? "border-r-green-500 border-4 border-y-indigo-200 border-l-indigo-200"
+                        ? "border-r-green-500 border-2 font-semibold border-y-indigo-200 border-l-indigo-200 bg-indigo-200 border-r-4"
                         : ""
                     }`}
                   >
-                    <span className="ml-4 text-2xl">{item.icon}</span>
-                    <p className="m-5">{item.title}</p>
+                    <span className="ml-4 text-2xl text-indigo-500 ">
+                      {item.icon}
+                    </span>
+                    <p className="m-5 hover:font-semibold">{item.title}</p>
                   </li>
                 </Link>
               );
