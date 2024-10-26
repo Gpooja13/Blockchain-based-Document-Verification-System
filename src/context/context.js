@@ -20,6 +20,9 @@ export const GlobalContextProvider = ({ children }) => {
   const [delIssueEvents, setDelIssueEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [refreshLog, setRefreshLog] = useState("");
+  const [authorityInfo, setAuthorityInfo] = useState(null);
+  const [hashcount, setHashcount] = useState(0);
+  const [ownerAddress, setOwnerAddress] = useState("");
 
   const connect = async () => {
     if (window.ethereum) {
@@ -130,6 +133,7 @@ export const GlobalContextProvider = ({ children }) => {
           method: "eth_requestAccounts",
         });
         const userAddress = accounts[0]; // Get the user's address
+        console.log("user",userAddress);
         setUserAddress(userAddress); // Store the user's address
 
         const contractInstance = new web3.eth.Contract(
@@ -166,6 +170,8 @@ export const GlobalContextProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
+        ownerAddress,
+        setOwnerAddress,
         connected,
         setConnected,
         email,
@@ -191,6 +197,10 @@ export const GlobalContextProvider = ({ children }) => {
         setShowModal,
         refreshLog,
         setRefreshLog,
+        authorityInfo,
+        setAuthorityInfo,
+        hashcount,
+        setHashcount,
 
         connect,
         initializeWeb3,

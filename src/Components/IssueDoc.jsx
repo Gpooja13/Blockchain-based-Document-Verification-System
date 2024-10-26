@@ -4,9 +4,15 @@ import {
   MdOutlineArrowForwardIos,
   MdOutlineArrowBackIosNew,
 } from "react-icons/md";
+import { FiAlertCircle } from "react-icons/fi";
 import { useGlobalContext } from "../context/context";
+import { Link } from "react-router-dom";
 
-export default function IssueDoc({ togglePage, currentPage }) {
+export default function IssueDoc({
+  togglePage,
+  currentPage,
+  getAuthorityInfo,
+}) {
   const [cid, setCid] = useState(null);
   const [name, setName] = useState("");
   const [rollno, setRollno] = useState("");
@@ -30,7 +36,9 @@ export default function IssueDoc({ togglePage, currentPage }) {
     setLoading,
     handleFileChange,
     refreshLog,
-        setRefreshLog
+    setRefreshLog,
+    authorityInfo,
+   
   } = useGlobalContext();
 
   const uploadFileToPinata = async () => {
@@ -173,6 +181,16 @@ export default function IssueDoc({ togglePage, currentPage }) {
   return (
     <div class="mx-auto bg-white h-[68vh] p-10 rounded-3xl drop-shadow-lg ">
       <div className="flex justify-center">
+        {!authorityInfo && <h3 className=" font-semibold absolute left-0 top-12 ml-10 flex text-sm flex-col">
+          <Link to={"/contact"}>
+            <div className="flex items-center">
+              <FiAlertCircle className="mr-1" />
+              Not Registered as a Validator{" "}
+            </div>
+            <p className="ml-4 text-red-500">Contact us</p>
+          </Link>
+        </h3>}
+
         <h2 className="font-semibold text-2xl">Upload Document</h2>
         <button
           type="button"
@@ -321,7 +339,7 @@ export default function IssueDoc({ togglePage, currentPage }) {
             className="rounded-lg border border-yellow-500 bg-yellow-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-yellow-700 hover:bg-yellow-700 focus:ring focus:ring-yellow-200 disabled:cursor-not-allowed disabled:border-yellow-300 disabled:bg-yellow-300"
             disabled={!isFileHashed || loading}
           >
-            {loading ? "Processing..." : "Upload File"}
+            {loading && authorityInfo ? "Processing..." : "Upload File"}
           </button>
         </div>
       </div>

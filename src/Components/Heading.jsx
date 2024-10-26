@@ -26,6 +26,8 @@ export default function Heading({ title, showBreadcrum }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
       if (!currentUser) navigate("/signin");
+      else
+      connect();
     });
 
     return () => unsubscribe();

@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { GrConnect } from "react-icons/gr";
 import { useGlobalContext } from "../context/context";
 import { FaUniversity } from "react-icons/fa";
-import { MdFileUpload, MdVerified } from "react-icons/md";
+import { MdVerified } from "react-icons/md";
 import { TbMessageChatbotFilled } from "react-icons/tb";
 import { RiInformation2Fill } from "react-icons/ri";
 import { GoHomeFill } from "react-icons/go";
 import { BiSolidFileFind } from "react-icons/bi";
-import { MdFindInPage } from "react-icons/md";
-import { FaFileUpload } from "react-icons/fa";
 import { FaFileSignature } from "react-icons/fa6";
 import { FaCoins } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
@@ -49,7 +46,7 @@ export default function SideBar() {
   return (
     <div className="z-10 drop-shadow-sm bg-indigo-100 h-[100vh]">
       <aside className="w-72 flex-none p-2 h-full ">
-        <div className="flex flex-wrap items-end justify-center w-full h-[24vh]">
+        <div className="flex flex-wrap items-end justify-center w-full h-[25vh]">
           <div className="flex items-center justify-center">
             <img src="/logo.webp" alt="logo" width={"50px"} />
             <p className="text-2xl">

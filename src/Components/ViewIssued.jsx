@@ -7,9 +7,15 @@ import {
 } from "react-icons/md";
 import { useGlobalContext } from "../context/context";
 import { FaExternalLinkAlt, FaDownload } from "react-icons/fa";
+import { FiAlertCircle } from "react-icons/fi";
 import Modal from "../Components/Modal";
+import { Link } from "react-router-dom";
 
-export default function ViewIssued({ togglePage, currentPage }) {
+export default function ViewIssued({
+  togglePage,
+  currentPage,
+  getAuthorityInfo,
+}) {
   const {
     issueEvents,
     setIssueEvents,
@@ -27,9 +33,11 @@ export default function ViewIssued({ togglePage, currentPage }) {
     setLoading,
     refreshLog,
     setRefreshLog,
+    hashcount,
+    authorityInfo,
+    setAuthorityInfo,
   } = useGlobalContext();
-  const [authorityInfo, setAuthorityInfo] = useState(null);
-  const [hashcount, setHashcount] = useState(0);
+
   const [delHash, setDelHash] = useState("");
 
   const deleteHash = async () => {
@@ -66,39 +74,31 @@ export default function ViewIssued({ togglePage, currentPage }) {
     }
   };
 
-  const getAuthorityInfo = async (exporterAddress) => {
-    try {
-      // Ensure the contract is available
-      if (!contract) {
-        throw new Error("Smart contract is not initialized.");
-      }
-
-      const exporterInfo = await contract.methods
-        .getExporterInfo(exporterAddress)
-        .call();
-      const hashesCount = await contract.methods.count_hashes().call();
-
-      setAuthorityInfo(exporterInfo);
-      setHashcount(hashesCount);
-    } catch (error) {
-      console.error("Error fetching exporter information:", error.message);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    getAuthorityInfo(userAddress);
-  }, []);
+  // useEffect(() => {
+  //   getAuthorityInfo(userAddress);
+  // }, []);
 
   return (
     <>
       <Modal deleteFunction={deleteHash} delRecord={delHash} title={"Record"} />
       <div class="mx-auto bg-white h-[68vh] p-10 rounded-3xl drop-shadow-lg  ">
         <div className="flex justify-center">
-          <h3 className=" font-semibold absolute left-0 top-14 ml-10 flex items-center ">
-            <MdOutlineLocationOn className="mr-1" />
-            {authorityInfo}
-          </h3>
+          {authorityInfo ? (
+            <h3 className=" font-semibold absolute left-0 top-14 ml-10 flex items-center ">
+              <MdOutlineLocationOn className="mr-1" />
+              {authorityInfo}
+            </h3>
+          ) : (
+            <h3 className=" font-semibold absolute left-0 top-12 ml-10 flex text-sm flex-col">
+              <Link to={"/contact"}>
+                <div className="flex items-center">
+                  <FiAlertCircle className="mr-1" />
+                  Not Registered as a Validator{" "}
+                </div>
+                <p className="ml-4 text-red-500">Contact us</p>
+              </Link>
+            </h3>
+          )}
           <h2 className="font-semibold text-2xl">{`Document Issued (${hashcount}) `}</h2>
           <button
             type="button"
