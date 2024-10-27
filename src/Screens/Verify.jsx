@@ -89,7 +89,7 @@ export default function Verify() {
                   </div>
                   <div class="text-gray-600">
                     {file ? (
-                      <p className="font-medium text-primary-500 hover:text-primary-700">
+                      <p className="font-medium text-primary-500 hover:text-primary-700 text-wrap w-3/4 text-sm">
                         {file.name}
                       </p>
                     ) : (
@@ -151,7 +151,7 @@ export default function Verify() {
               <ul>
                 <li className="border-b pb-5 mb-2 space-y-2">
                   <h3 className="text-center mb-3 text-lg">
-                    <strong>title{verificationInfo?.info}</strong>
+                    <strong>{verificationInfo?.info}</strong>
                   </h3>
                   <p>
                     <strong>Description: </strong>{" "}
@@ -208,7 +208,7 @@ export default function Verify() {
               </ul>
             ) : (
               <div className="flex items-center justify-center flex-col">
-                <p className="w-full flex justify-center h-1/2 items-center mt-10">
+                <p className="w-full flex justify-center h-1/2 items-center my-10">
                   No Records
                 </p>
                 {isVerified === "unKnown" ? (

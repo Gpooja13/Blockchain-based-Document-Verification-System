@@ -10,11 +10,11 @@ export default function About() {
           <div className="flex flex-col">
             <div className="flex items-center">
               <img src="/logo.webp" alt="" width={"50px"} />
-              <h1 className="text-2xl">
+              <h1 className="text-2xl text-black">
                 <strong>DocCheck</strong>
               </h1>
             </div>
-            <h2 className="font-semibold text-wrap my-1">
+            <h2 className="font-semibold text-wrap my-1 text-gray-800">
               A BlockChain based Validation & Verification App
             </h2>
           </div>

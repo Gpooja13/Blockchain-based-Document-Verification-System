@@ -9,7 +9,6 @@ import { RiInformation2Fill } from "react-icons/ri";
 import { GoHomeFill } from "react-icons/go";
 import { BiSolidFileFind } from "react-icons/bi";
 import { FaFileSignature } from "react-icons/fa6";
-import { FaCoins } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 
 export default function SideBar() {
@@ -27,12 +26,12 @@ export default function SideBar() {
     { icon: <TbMessageChatbotFilled />, title: "Contact", link: "/contact" },
   ];
   const [selected, setSelected] = useState(menuItems[0]);
-  const { userAddress, chain, userBalance } = useGlobalContext();
+  const { userAddress, chain } = useGlobalContext();
   const location = useLocation();
 
   const truncateAddress = (address) => {
     if (!address) return "";
-    return `${address.substr(0, 5)}...${address.substr(address.length - 5)}`;
+    return `${address.substr(0, 5)}....${address.substr(address.length - 6)}`;
   };
 
   useEffect(() => {
@@ -56,13 +55,11 @@ export default function SideBar() {
 
           <div className="flex p-1 w-full mx-3 ">
             <div className=" flex flex-col hover:font-bold cursor-pointer ">
-              <div className="text-sm font-medium text-secondary-500 flex gap-2">
-                <span><FaCoins/></span>Address: {truncateAddress(userAddress)}
+              <div className="text-sm font-medium text-secondary-500 flex gap-2 items-center">
+                <span><FaLocationDot/></span>Address: {truncateAddress(userAddress)}
               </div>
               {/* <div className="text-xs text-secondary-400">Network: {chain}</div> */}
-              <div className="text-sm font-medium text-secondary-400 flex gap-2">
-              <span><FaLocationDot/></span>Balance: {userBalance}
-              </div>
+              
             </div>
           </div>
         </div>

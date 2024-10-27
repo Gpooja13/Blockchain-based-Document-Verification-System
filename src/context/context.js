@@ -14,7 +14,6 @@ export const GlobalContextProvider = ({ children }) => {
   const [isFileHashed, setIsFileHashed] = useState(false);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [userBalance, setUserBalance] = useState(null);
   const [chain, setChain] = useState(null);
   const [issueEvents, setIssueEvents] = useState([]);
   const [delIssueEvents, setDelIssueEvents] = useState([]);
@@ -109,18 +108,18 @@ export const GlobalContextProvider = ({ children }) => {
     }
   };
 
-  const getEthBalance = async (user) => {
-    try {
-      const web3 = new Web3(Web3.givenProvider); // Initialize Web3 with the given provider
-      const balanceInWei = await web3.eth.getBalance(user); // Get balance in Wei
-      const balanceInEther = web3.utils.fromWei(balanceInWei, "ether"); // Convert balance to Ether
-      const formattedBalance = parseFloat(balanceInEther).toFixed(6); // Format to 6 decimal places
-      setUserBalance(formattedBalance); // Set the formatted balance
-    } catch (err) {
-      console.error("Error fetching balance:", err);
-      setUserBalance("n/a"); // Set to "n/a" in case of an error
-    }
-  };
+  // const getEthBalance = async (user) => {
+  //   try {
+  //     const web3 = new Web3(Web3.givenProvider); // Initialize Web3 with the given provider
+  //     const balanceInWei = await web3.eth.getBalance(user); // Get balance in Wei
+  //     const balanceInEther = web3.utils.fromWei(balanceInWei, "ether"); // Convert balance to Ether
+  //     const formattedBalance = parseFloat(balanceInEther).toFixed(6); // Format to 6 decimal places
+  //     setUserBalance(formattedBalance); // Set the formatted balance
+  //   } catch (err) {
+  //     console.error("Error fetching balance:", err);
+  //     setUserBalance("n/a"); // Set to "n/a" in case of an error
+  //   }
+  // };
 
   const initializeWeb3 = async () => {
     if (typeof window.ethereum !== "undefined") {
@@ -141,7 +140,7 @@ export const GlobalContextProvider = ({ children }) => {
           contractAddress
         );
         setContract(contractInstance);
-        getEthBalance(userAddress);
+        // getEthBalance(userAddress);
       } catch (error) {
         console.error("Error initializing contract:", error);
       }
@@ -180,7 +179,6 @@ export const GlobalContextProvider = ({ children }) => {
         userAddress,
         chain,
         get_ChainID,
-        userBalance,
         fileHash,
         message,
         setMessage,

@@ -75,6 +75,7 @@ export default function View() {
                 id="address"
                 value={email}
                 // onChange={(e) => setEmail(e.target.value)}
+                readOnly
                 className="block w-full h-[8vh] px-4 rounded-md border-gray-300 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
                 placeholder="abc@gmail.com"
               />
